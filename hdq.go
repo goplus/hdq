@@ -86,6 +86,7 @@ func (p NodeSet) ForEach(filter func(node NodeSet)) {
 	}
 }
 
+// Render renders the node set to the given writer.
 func (p NodeSet) Render(w io.Writer, suffix ...string) (err error) {
 	if p.Err != nil {
 		return p.Err

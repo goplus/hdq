@@ -21,6 +21,10 @@ import (
 	"golang.org/x/net/html"
 )
 
+const (
+	GopPackage = true // to indicate this is a Go+ package
+)
+
 var (
 	ErrNotFound = syscall.ENOENT
 	ErrBreak    = syscall.ELOOP

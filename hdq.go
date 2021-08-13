@@ -86,6 +86,23 @@ func (p NodeSet) ForEach(filter func(node NodeSet)) {
 	}
 }
 
+func (p NodeSet) Render(w io.Writer, suffix ...string) (err error) {
+	if p.Err != nil {
+		return p.Err
+	}
+	p.Data.ForEach(func(node *html.Node) error {
+		if e := html.Render(w, node); e != nil {
+			err = e
+			return ErrBreak
+		}
+		if suffix != nil {
+			io.WriteString(w, suffix[0])
+		}
+		return nil
+	})
+	return
+}
+
 // -----------------------------------------------------------------------------
 
 type oneNode struct {

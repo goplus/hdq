@@ -1,0 +1,46 @@
+import (
+	"github.com/qiniu/hdq"
+)
+
+// -----------------------------------------------------------------------------
+
+type Repo struct {
+	Repo       string
+	ForkedFrom string
+	Title      string
+	Language   string
+	UpdateTime string
+	Star       int
+	Forks      int
+}
+
+func newRepo(node hdq.NodeSet) Repo {
+	node := node.child
+	repoStats := node.div.class("repo-list-stats").one
+	return {
+		Repo:       node.class("repo-list-name").child.a.hrefVal,
+		Title:      node.class("repo-list-description").child.text,
+		ForkedFrom: node.class("repo-list-info").child.a.hrefVal,
+		Language:   repoStats.firstTextChild.text,
+		UpdateTime: node.class("repo-list-meta").child.element("time").attr("datetime"),
+		Star:       repoStats.child.a.attr("aria-label", "Stargazers").int,
+		Forks:      repoStats.child.a.attr("aria-label", "Forks").int,
+	}
+}
+
+// -----------------------------------------------------------------------------
+
+type Result struct {
+	Repos []Repo
+	Next  string
+}
+
+func New(doc hdq.NodeSet) Result {
+	divRepos := doc.any.div.class("container")
+	repoList := divRepos.child.ul.containsClass("repo-list").one
+	repos := [newRepo(x) for x <- repoList.child.li]
+	next := doc.any.div.class("pagination").child.a.childEqualText("Next").hrefVal
+	return {Repos: repos, Next: next}
+}
+
+// -----------------------------------------------------------------------------

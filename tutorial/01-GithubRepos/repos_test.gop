@@ -1,0 +1,15 @@
+import (
+	"reflect"
+	"testing"
+
+	"github.com/qiniu/hdq"
+)
+
+func TestNew(t *testing.T) {
+	doc := hdq.Source("zip://data.zip#index.htm")
+	ret := New(doc)
+	expected := Result{}
+	if reflect.DeepEqual(ret, expected) {
+		t.Fatal("Test failed:", ret, expected)
+	}
+}

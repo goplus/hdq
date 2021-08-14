@@ -14,10 +14,8 @@
 package hdq
 
 import (
-	"bytes"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -25,72 +23,6 @@ import (
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
-
-var (
-	// DefaultUserAgent is the default UserAgent and is used by HTTPSource.
-	DefaultUserAgent string
-	ReqHeaderProc    func(req *http.Request)
-)
-
-// -----------------------------------------------------------------------------
-
-// URISource returns a NodeSet of a uri.
-func URISource(uri string) (ret NodeSet) {
-	switch {
-	case strings.HasPrefix(uri, "http://"), strings.HasPrefix(uri, "https://"):
-		return HTTPSource(uri)
-	default:
-		return FileSource(uri)
-	}
-}
-
-// HTTPSource returns a NodeSet of a url.
-func HTTPSource(url string) (ret NodeSet) {
-	resp, err := httpGet(url)
-	if err != nil {
-		return NodeSet{Err: err}
-	}
-	defer resp.Body.Close()
-
-	return Source(resp.Body)
-}
-
-func httpGet(url string) (resp *http.Response, err error) {
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-	if DefaultUserAgent != "" {
-		req.Header.Set("User-Agent", DefaultUserAgent)
-	}
-	if ReqHeaderProc != nil {
-		ReqHeaderProc(req)
-	}
-	return http.DefaultClient.Do(req)
-}
-
-// FileSource returns a NodeSet of a htmlFile.
-func FileSource(htmlFile string) (ret NodeSet) {
-	f, err := os.Open(htmlFile)
-	if err != nil {
-		return NodeSet{Err: err}
-	}
-	defer f.Close()
-
-	return Source(f)
-}
-
-// BytesSource returns a NodeSet from a text.
-func BytesSource(text []byte) (ret NodeSet) {
-	r := bytes.NewReader(text)
-	return Source(r)
-}
-
-// StringSource returns a NodeSet from a text.
-func StringSource(text string) (ret NodeSet) {
-	r := strings.NewReader(text)
-	return Source(r)
-}
 
 // -----------------------------------------------------------------------------
 

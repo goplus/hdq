@@ -14,10 +14,12 @@
 package hdq
 
 import (
+	"bytes"
 	"errors"
 	"io"
 	"syscall"
 
+	"github.com/qiniu/hdq/stream"
 	"golang.org/x/net/html"
 )
 
@@ -52,6 +54,34 @@ type cachedNodeEnum interface {
 type NodeSet struct {
 	Data NodeEnum
 	Err  error
+}
+
+// New creates a NodeSet object.
+func New(r io.Reader) NodeSet {
+	doc, err := html.Parse(r)
+	if err != nil {
+		return NodeSet{Err: err}
+	}
+	return NodeSet{Data: oneNode{doc}}
+}
+
+// Source opens a stream (if necessary) to create a NodeSet object.
+func Source(r interface{}) (ret NodeSet) {
+	switch v := r.(type) {
+	case string:
+		f, err := stream.Open(v)
+		if err != nil {
+			return NodeSet{Err: err}
+		}
+		return New(f)
+	case []byte:
+		r := bytes.NewReader(v)
+		return New(r)
+	case io.Reader:
+		return New(v)
+	default:
+		panic("unsupport source type")
+	}
 }
 
 func (p NodeSet) Ok() bool {
@@ -116,14 +146,6 @@ func (p oneNode) ForEach(filter func(node *html.Node) error) {
 
 func (p oneNode) Cached() int {
 	return 1
-}
-
-func Source(r io.Reader) (ret NodeSet) {
-	doc, err := html.Parse(r)
-	if err != nil {
-		return NodeSet{Err: err}
-	}
-	return NodeSet{Data: oneNode{doc}}
 }
 
 // -----------------------------------------------------------------------------

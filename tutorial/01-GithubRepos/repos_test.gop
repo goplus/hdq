@@ -1,8 +1,11 @@
+package repos
+
 import (
 	"reflect"
 	"testing"
 
 	"github.com/qiniu/hdq"
+	_ "github.com/qiniu/hdq/stream/zip"
 )
 
 func TestNew(t *testing.T) {

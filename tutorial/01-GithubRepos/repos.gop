@@ -1,3 +1,5 @@
+package repos
+
 import (
 	"github.com/qiniu/hdq"
 )
@@ -15,7 +17,7 @@ type Repo struct {
 }
 
 func newRepo(node hdq.NodeSet) Repo {
-	node := node.child
+	node = node.child
 	repoStats := node.div.class("repo-list-stats").one
 	return {
 		Repo:       node.class("repo-list-name").child.a.hrefVal!,

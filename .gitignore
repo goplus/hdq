@@ -1,6 +1,7 @@
 _htmlab
 .DS_Store
 index.htm
+gop_autogen*.go
 
 # Binaries for programs and plugins
 *.exe

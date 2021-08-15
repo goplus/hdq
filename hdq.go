@@ -106,14 +106,18 @@ func (p NodeSet) Cache() NodeSet {
 	return NodeSet{Data: &fixNodes{nodes}}
 }
 
-func (p NodeSet) ForEach(filter func(node NodeSet)) {
+func (p NodeSet) Gop_Enum(callback func(node NodeSet)) {
 	if p.Err == nil {
 		p.Data.ForEach(func(node *html.Node) error {
 			t := NodeSet{Data: oneNode{node}}
-			filter(t)
+			callback(t)
 			return nil
 		})
 	}
+}
+
+func (p NodeSet) ForEach(callback func(node NodeSet)) {
+	p.Gop_Enum(callback)
 }
 
 // Render renders the node set to the given writer.

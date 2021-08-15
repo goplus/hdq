@@ -17,7 +17,6 @@ import (
 	"bytes"
 	"errors"
 	"io"
-	"syscall"
 
 	"github.com/qiniu/hdq/stream"
 	"golang.org/x/net/html"
@@ -28,8 +27,8 @@ const (
 )
 
 var (
-	ErrNotFound = syscall.ENOENT
-	ErrBreak    = syscall.ELOOP
+	ErrNotFound = errors.New("entity not found")
+	ErrBreak    = errors.New("break")
 
 	ErrTooManyNodes = errors.New("too many nodes")
 	ErrInvalidNode  = errors.New("invalid node")

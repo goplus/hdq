@@ -16,7 +16,6 @@ package zip
 import (
 	"archive/zip"
 	"io"
-	"io/fs"
 	"strings"
 	"syscall"
 
@@ -26,12 +25,12 @@ import (
 // -------------------------------------------------------------------------------------
 
 type readCloser struct {
-	fs.File
+	io.ReadCloser
 	zipf *zip.ReadCloser
 }
 
 func (p *readCloser) Close() error {
-	p.File.Close()
+	p.ReadCloser.Close()
 	return p.zipf.Close()
 }
 
@@ -46,11 +45,16 @@ func Open(file string) (io.ReadCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	f, err := zipf.Open(name)
-	if err != nil {
-		return nil, err
+	for _, fi := range zipf.File {
+		if fi.Name == name {
+			f, err := fi.Open()
+			if err != nil {
+				return nil, err
+			}
+			return &readCloser{f, zipf}, nil
+		}
 	}
-	return &readCloser{f, zipf}, nil
+	return nil, syscall.ENOENT
 }
 
 func init() {

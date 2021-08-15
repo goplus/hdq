@@ -23,3 +23,11 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v1.0.2
+      with:
+        token: 1d38b948-0d51-4606-98bf-8a0021df5f10
+        file: ./coverage.txt
+        flags: unittests
+        name: codecov-hdq

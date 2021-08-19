@@ -149,6 +149,11 @@ func (p NodeSet) A() (ret NodeSet) {
 	return p.dataAtom(atom.A)
 }
 
+// P returns NodeSet which node type is ElementNode and it's element type is `p`.
+func (p NodeSet) P() (ret NodeSet) {
+	return p.dataAtom(atom.P)
+}
+
 // Img returns NodeSet which node type is ElementNode and it's element type is `img`.
 func (p NodeSet) Img() (ret NodeSet) {
 	return p.dataAtom(atom.Img)
@@ -184,17 +189,17 @@ func (p NodeSet) Li() (ret NodeSet) {
 	return p.dataAtom(atom.Li)
 }
 
-// Class returns NodeSet which class is `v`.
+// Class returns NodeSet which `class` attribute is `v`.
 func (p NodeSet) Class(v string) (ret NodeSet) {
 	return p.Attribute("class", v)
 }
 
-// ID returns NodeSet which ID attribute is `v`.
-func (p NodeSet) ID(v string) (ret NodeSet) {
+// Id returns NodeSet which `id` attribute is `v`.
+func (p NodeSet) Id(v string) (ret NodeSet) {
 	return p.Attribute("id", v).One()
 }
 
-// Href returns NodeSet which href attribute is `v`.
+// Href returns NodeSet which `href` attribute is `v`.
 func (p NodeSet) Href(v string) (ret NodeSet) {
 	return p.Attribute("href", v)
 }

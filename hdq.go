@@ -46,7 +46,7 @@ type NodeEnum interface {
 	ForEach(filter func(node *html.Node) error)
 }
 
-type cachedNodeEnum interface {
+type cachedGetter interface {
 	Cached() int
 }
 
@@ -87,15 +87,8 @@ func (p NodeSet) Ok() bool {
 	return p.Err == nil
 }
 
-func (p NodeSet) CachedLen() int {
-	if cds, ok := p.Data.(cachedNodeEnum); ok {
-		return cds.Cached()
-	}
-	return 0
-}
-
-func (p NodeSet) Cache() NodeSet {
-	if _, ok := p.Data.(cachedNodeEnum); ok {
+func (p NodeSet) All() NodeSet {
+	if _, ok := p.Data.(cachedGetter); ok {
 		return p
 	}
 	nodes, err := p.Collect()
@@ -175,6 +168,10 @@ func Nodes(nodes ...*html.Node) (ret NodeSet) {
 
 // -----------------------------------------------------------------------------
 
+const (
+	unknownNumNodes = -1
+)
+
 type anyNodes struct {
 	data NodeEnum
 }
@@ -187,7 +184,7 @@ func (p *anyNodes) ForEach(filter func(node *html.Node) error) {
 }
 
 func (p *anyNodes) Cached() int {
-	return -1
+	return unknownNumNodes
 }
 
 func anyForEach(p *html.Node, filter func(node *html.Node) error) error {

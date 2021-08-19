@@ -1,5 +1,6 @@
 _htmlab
 .DS_Store
+.gop
 index.htm
 gop_autogen*.go
 

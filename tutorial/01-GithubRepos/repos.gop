@@ -17,17 +17,24 @@ type Repo struct {
 }
 
 func newRepo(node hdq.NodeSet) Repo {
-	node = node.child
-	repoStats := node.div.class("repo-list-stats").one
+	aRepo := node.any.a.attr("itemprop", "name codeRepository").one
+	forkedFrom := aRepo.parentN(2).any.containsText("Forked from").one.nextSibling(1).a.hrefVal?:""
+	title := node.any.p.attr("itemprop", "description").text?:""
+	// aRepo.parentN(3).dump
 	return {
-		Repo:       node.class("repo-list-name").child.a.hrefVal!,
-		Title:      node.class("repo-list-description").child.text!,
-		ForkedFrom: node.class("repo-list-info").child.a.hrefVal!,
-		Language:   repoStats.firstTextChild.text!,
-		UpdateTime: node.class("repo-list-meta").child.element("time").attr("datetime")!,
-		Star:       repoStats.child.a.attr("aria-label", "Stargazers").int!,
-		Forks:      repoStats.child.a.attr("aria-label", "Forks").int!,
+		Repo:       aRepo.hrefVal!,
+		ForkedFrom: forkedFrom,
+		Title:      title,
 	}
+	/*	node = node.child
+		repoStats := node.div.class("repo-list-stats").one
+		return {
+			Language:   repoStats.firstTextChild.text!,
+			UpdateTime: node.class("repo-list-meta").child.element("time").attr("datetime")!,
+			Star:       repoStats.child.a.attr("aria-label", "Stargazers").int!,
+			Forks:      repoStats.child.a.attr("aria-label", "Forks").int!,
+		}
+	*/
 }
 
 // -----------------------------------------------------------------------------
@@ -38,10 +45,10 @@ type Result struct {
 }
 
 func New(doc hdq.NodeSet) Result {
-	divRepos := doc.any.div.class("container")
-	repoList := divRepos.child.ul.containsClass("repo-list").one
-	repos := [newRepo(x) for x <- repoList.child.li]
-	next := doc.any.div.class("pagination").child.a.childEqualText("Next").hrefVal!
+	divRepos := doc.any.div.id("user-repositories-list").one
+	repoList := divRepos.child.ul.one
+	repos := [newRepo(x) for x <- repoList.child.li.one]
+	next := doc.any.div.class("paginate-container").one.any.a.childEqualText("Next").hrefVal?:""
 	return {Repos: repos, Next: next}
 }
 

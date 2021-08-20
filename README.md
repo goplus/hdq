@@ -10,7 +10,7 @@ hdq - HTML DOM Query Language for Go+
 
 ## Summary about hdq
 
-hdq is a Go+ package for processing HTML document.
+hdq is a Go+ package for processing HTML documents.
 
 ## Tutorials
 

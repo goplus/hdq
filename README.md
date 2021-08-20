@@ -10,7 +10,7 @@ hdq - HTML DOM Query Language for Go+
 
 ## Summary about hdq
 
-hdq is a Go+ package processing HTML document.
+hdq is a Go+ package for processing HTML document.
 
 ## Tutorials
 
@@ -33,4 +33,4 @@ Then, select all `a` elements by `doc.any.a`. Here `doc.any` means all nodes in 
 
 Then, we visit all these `a` elements, get `href` attribute value and assign it to the variable `link`. If link is not empty, collect it.
 
-At last, we return all collected links.
+At last, we return all collected links. Goto [tutorial/01-Links](tutorial/01-Links/links.gop) to get the full source code.

@@ -1,6 +1,7 @@
 _htmlab
 .DS_Store
 .gop
+coverage.txt
 index.htm
 gop_autogen*.go
 

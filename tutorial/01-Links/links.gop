@@ -1,0 +1,14 @@
+import (
+	"os"
+	"github.com/qiniu/hdq"
+	_ "github.com/qiniu/hdq/stream/zip"
+)
+
+func links(r interface{}) []string {
+	doc := hdq.Source(r)
+	return [link for a <- doc.any.a, link := a.hrefVal?:""; link != ""]
+}
+
+for link <- links("zip://../02-GithubRepos/data.zip#index.htm") {
+	println(link)
+}

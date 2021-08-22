@@ -6,7 +6,7 @@ import (
 
 func links(r interface{}) []string {
 	doc := hdq.Source(r)
-	return [link for a <- doc.any.a, link := a.hrefVal?:""; link != ""]
+	return [link for a <- doc.any.a, link := a.href?:""; link != ""]
 }
 
 for link <- links("zip://../02-GithubRepos/data.zip#index.htm") {

@@ -199,11 +199,6 @@ func (p NodeSet) Id(v string) (ret NodeSet) {
 	return p.Attribute("id", v).One()
 }
 
-// Href returns NodeSet which `href` attribute is `v`.
-func (p NodeSet) Href(v string) (ret NodeSet) {
-	return p.Attribute("href", v)
-}
-
 // -----------------------------------------------------------------------------
 
 // ExactText returns text of NodeSet.
@@ -319,6 +314,16 @@ func (p NodeSet) HrefVal(exactlyOne ...bool) (text string, err error) {
 }
 
 // -----------------------------------------------------------------------------
+
+// Href returns href attribute's value of NodeSet.
+func (p NodeSet) Href__0(exactlyOne ...bool) (text string, err error) {
+	return p.AttrVal("href", exactlyOne...)
+}
+
+// Href returns NodeSet which `href` attribute is `v`.
+func (p NodeSet) Href__1(v string) (ret NodeSet) {
+	return p.Attribute("href", v)
+}
 
 func (p NodeSet) Attr__0(k string, exactlyOne ...bool) (text string, err error) {
 	return p.AttrVal(k, exactlyOne...)

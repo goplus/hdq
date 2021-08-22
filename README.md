@@ -23,7 +23,7 @@ import "github.com/qiniu/hdq"
 
 func links(url interface{}) []string {
 	doc := hdq.Source(url)
-	return [link for a <- doc.any.a, link := a.hrefVal?:""; link != ""]
+	return [link for a <- doc.any.a, link := a.href?:""; link != ""]
 }
 ```
 

@@ -20,6 +20,9 @@ import (
 
 	"github.com/qiniu/hdq/stream"
 	"golang.org/x/net/html"
+
+	_ "github.com/qiniu/hdq/stream/http"
+	_ "github.com/qiniu/hdq/stream/zip"
 )
 
 const (

@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/qiniu/hdq"
-	_ "github.com/qiniu/hdq/stream/zip"
 )
 
 const outTestNew = `{

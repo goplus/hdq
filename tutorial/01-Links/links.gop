@@ -1,7 +1,6 @@
 import (
 	"os"
 	"github.com/qiniu/hdq"
-	_ "github.com/qiniu/hdq/stream/zip"
 )
 
 func links(r interface{}) []string {

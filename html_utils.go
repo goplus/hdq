@@ -97,6 +97,14 @@ func containsText(node *html.Node, text string) bool {
 	return strings.Contains(node.Data, text)
 }
 
+// hasPrefixText returns true if the type of node is TextNode and its Data has prefix `text`.
+func hasPrefixText(node *html.Node, text string) bool {
+	if node.Type != html.TextNode {
+		return false
+	}
+	return strings.Contains(strings.TrimLeft(node.Data, " \t\r\n"), text)
+}
+
 // exactText returns text of node if the type of node is TextNode.
 func exactText(node *html.Node) (string, error) {
 	if node.Type != html.TextNode {

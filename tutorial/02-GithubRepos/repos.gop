@@ -19,7 +19,7 @@ func newRepo(node hdq.NodeSet) Repo {
 	aRepo := node.any.a.attr("itemprop", "name codeRepository").one
 	repo := aRepo.href!
 	root := aRepo.parentN(3).one
-	forkedFrom := root.any.span.any.containsText("Forked from").one.nextSibling(1).a.href?:""
+	forkedFrom := root.any.span.any.textContains("Forked from").one.nextSibling(1).a.href?:""
 	title := root.any.p.attr("itemprop", "description").text?:""
 	language := root.any.span.attr("itemprop", "programmingLanguage").one.text?:""
 	updateTime := root.any.element("relative-time").one.attr("datetime")?:""

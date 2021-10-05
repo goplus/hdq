@@ -53,17 +53,24 @@ func (p NodeSet) ChildEqualText(text string) (ret NodeSet) {
 	})
 }
 
-// EqualText returns NodeSet which node type is TextNode and it's text equals `text`.
-func (p NodeSet) EqualText(text string) (ret NodeSet) {
+// TextEqual returns NodeSet which node type is TextNode and it's text equals `text`.
+func (p NodeSet) TextEqual(text string) (ret NodeSet) {
 	return p.Match(func(node *html.Node) bool {
 		return equalText(node, text)
 	})
 }
 
-// ContainsText returns NodeSet which node type is TextNode and it's text contains `text`.
-func (p NodeSet) ContainsText(text string) (ret NodeSet) {
+// TextContains returns NodeSet which node type is TextNode and it's text contains `text`.
+func (p NodeSet) TextContains(text string) (ret NodeSet) {
 	return p.Match(func(node *html.Node) bool {
 		return containsText(node, text)
+	})
+}
+
+// TextHasPrefix returns NodeSet which node type is TextNode and its prefix is `text`.
+func (p NodeSet) TextHasPrefix(text string) (ret NodeSet) {
+	return p.Match(func(node *html.Node) bool {
+		return hasPrefixText(node, text)
 	})
 }
 

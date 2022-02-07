@@ -3,8 +3,8 @@ hdq - HTML DOM Query Language for Go+
 
 [![Build Status](https://github.com/goplus/hdq/actions/workflows/go.yml/badge.svg)](https://github.com/goplus/hdq/actions/workflows/go.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/goplus/hdq)](https://goreportcard.com/report/github.com/goplus/hdq)
-[![GitHub release](https://img.shields.io/github/v/tag/qiniu/hdq.svg?label=release)](https://github.com/goplus/hdq/releases)
-[![Coverage Status](https://codecov.io/gh/qiniu/hdq/branch/main/graph/badge.svg)](https://codecov.io/gh/qiniu/hdq)
+[![GitHub release](https://img.shields.io/github/v/tag/goplus/hdq.svg?label=release)](https://github.com/goplus/hdq/releases)
+[![Coverage Status](https://codecov.io/gh/goplus/hdq/branch/main/graph/badge.svg)](https://codecov.io/gh/goplus/hdq)
 [![Language](https://img.shields.io/badge/language-Go+-blue.svg)](https://github.com/goplus/gop)
 [![GoDoc](https://img.shields.io/badge/godoc-reference-teal.svg)](https://pkg.go.dev/mod/github.com/goplus/hdq)
 

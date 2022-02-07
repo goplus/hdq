@@ -18,11 +18,11 @@ import (
 	"errors"
 	"io"
 
-	"github.com/qiniu/hdq/stream"
+	"github.com/goplus/hdq/stream"
 	"golang.org/x/net/html"
 
-	_ "github.com/qiniu/hdq/stream/http"
-	_ "github.com/qiniu/hdq/stream/zip"
+	_ "github.com/goplus/hdq/stream/http"
+	_ "github.com/goplus/hdq/stream/zip"
 )
 
 const (

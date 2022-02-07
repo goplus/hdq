@@ -1,6 +1,6 @@
 import (
 	"os"
-	"github.com/qiniu/hdq"
+	"github.com/goplus/hdq"
 )
 
 func links(r interface{}) []string {

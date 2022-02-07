@@ -19,7 +19,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/qiniu/hdq/stream"
+	"github.com/goplus/hdq/stream"
 )
 
 // -------------------------------------------------------------------------------------

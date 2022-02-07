@@ -17,7 +17,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/qiniu/hdq/stream"
+	"github.com/goplus/hdq/stream"
 )
 
 var (

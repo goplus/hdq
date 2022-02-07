@@ -1,7 +1,7 @@
 package repos
 
 import (
-	"github.com/qiniu/hdq"
+	"github.com/goplus/hdq"
 )
 
 // -----------------------------------------------------------------------------

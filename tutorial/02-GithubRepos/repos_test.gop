@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/qiniu/hdq"
+	"github.com/goplus/hdq"
 )
 
 const outTestNew = `{

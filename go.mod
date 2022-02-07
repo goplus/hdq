@@ -1,4 +1,4 @@
-module github.com/qiniu/hdq
+module github.com/goplus/hdq
 
 go 1.16
 

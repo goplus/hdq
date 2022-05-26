@@ -211,28 +211,36 @@ func (p NodeSet) Id(v string) (ret NodeSet) {
 // ExactText returns text of NodeSet.
 // exactlyOne=false: if NodeSet is more than one, returns first node's text (if
 // node type is not TextNode, return error).
-func (p NodeSet) ExactText(exactlyOne ...bool) (text string, err error) {
-	node, err := p.CollectOne(exactlyOne...)
+func (p NodeSet) ExactText__1(exactlyOne bool) (text string, err error) {
+	node, err := p.CollectOne__1(exactlyOne)
 	if err != nil {
 		return
 	}
 	return exactText(node)
 }
 
+func (p NodeSet) ExactText__0() (text string, err error) {
+	return p.ExactText__1(false)
+}
+
 // Text returns text of NodeSet.
 // exactlyOne=false: if NodeSet is more than one, returns first node's text.
-func (p NodeSet) Text(exactlyOne ...bool) (text string, err error) {
-	node, err := p.CollectOne(exactlyOne...)
+func (p NodeSet) Text__1(exactlyOne bool) (text string, err error) {
+	node, err := p.CollectOne__1(exactlyOne)
 	if err != nil {
 		return
 	}
 	return textOf(node), nil
 }
 
+func (p NodeSet) Text__0() (text string, err error) {
+	return p.Text__1(false)
+}
+
 // ScanInt returns int value of p.Text().
 // exactlyOne=false: if NodeSet is more than one, returns first node's value.
 func (p NodeSet) ScanInt(format string, exactlyOne ...bool) (v int, err error) {
-	text, err := p.Text(exactlyOne...)
+	text, err := p.Text__1(exactlyOne != nil && exactlyOne[0])
 	if err != nil {
 		return
 	}
@@ -272,8 +280,8 @@ func parseFormat(format string) (prefix, suffix string, err error) {
 
 // UnitedFloat returns UnitedFloat value of p.Text().
 // exactlyOne=false: if NodeSet is more than one, returns first node's value.
-func (p NodeSet) UnitedFloat(exactlyOne ...bool) (v float64, err error) {
-	text, err := p.Text(exactlyOne...)
+func (p NodeSet) UnitedFloat__1(exactlyOne bool) (v float64, err error) {
+	text, err := p.Text__1(exactlyOne)
 	if err != nil {
 		return
 	}
@@ -294,20 +302,28 @@ func (p NodeSet) UnitedFloat(exactlyOne ...bool) (v float64, err error) {
 	return v * unit, nil
 }
 
+func (p NodeSet) UnitedFloat__0() (v float64, err error) {
+	return p.UnitedFloat__1(false)
+}
+
 // Int returns int value of p.Text().
 // exactlyOne=false: if NodeSet is more than one, returns first node's value.
-func (p NodeSet) Int(exactlyOne ...bool) (v int, err error) {
-	text, err := p.Text(exactlyOne...)
+func (p NodeSet) Int__1(exactlyOne bool) (v int, err error) {
+	text, err := p.Text__1(exactlyOne)
 	if err != nil {
 		return
 	}
 	return strconv.Atoi(strings.Replace(text, ",", "", -1))
 }
 
+func (p NodeSet) Int__0() (v int, err error) {
+	return p.Int__1(false)
+}
+
 // AttrVal returns attribute value of NodeSet.
 // exactlyOne=false: if NodeSet is more than one, returns first node's attribute value.
 func (p NodeSet) AttrVal(k string, exactlyOne ...bool) (text string, err error) {
-	node, err := p.CollectOne(exactlyOne...)
+	node, err := p.CollectOne__1(exactlyOne != nil && exactlyOne[0])
 	if err != nil {
 		return
 	}
@@ -316,20 +332,29 @@ func (p NodeSet) AttrVal(k string, exactlyOne ...bool) (text string, err error) 
 
 // HrefVal returns href attribute's value of NodeSet.
 // exactlyOne=false: if NodeSet is more than one, returns first node's attribute value.
-func (p NodeSet) HrefVal(exactlyOne ...bool) (text string, err error) {
-	return p.AttrVal("href", exactlyOne...)
+func (p NodeSet) HrefVal__1(exactlyOne bool) (text string, err error) {
+	return p.AttrVal("href", exactlyOne)
+}
+
+func (p NodeSet) HrefVal__0() (text string, err error) {
+	return p.AttrVal("href", false)
 }
 
 // -----------------------------------------------------------------------------
 
 // Href returns href attribute's value of NodeSet.
-func (p NodeSet) Href__0(exactlyOne ...bool) (text string, err error) {
-	return p.AttrVal("href", exactlyOne...)
+func (p NodeSet) Href__0() (text string, err error) {
+	return p.AttrVal("href", false)
 }
 
 // Href returns NodeSet which `href` attribute is `v`.
 func (p NodeSet) Href__1(v string) (ret NodeSet) {
 	return p.Attribute("href", v)
+}
+
+// Href returns href attribute's value of NodeSet.
+func (p NodeSet) Href__2(exactlyOne bool) (text string, err error) {
+	return p.AttrVal("href", exactlyOne)
 }
 
 func (p NodeSet) Attr__0(k string, exactlyOne ...bool) (text string, err error) {

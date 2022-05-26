@@ -282,7 +282,7 @@ func (p NodeSet) One() (ret NodeSet) {
 	if _, ok := p.Data.(oneNode); ok {
 		return p
 	}
-	node, err := p.CollectOne(false)
+	node, err := p.CollectOne__1(false)
 	if err != nil {
 		return NodeSet{Err: err}
 	}
@@ -495,12 +495,12 @@ func (p NodeSet) ChildrenAsText(doReplace bool) (ret NodeSet) {
 
 // -----------------------------------------------------------------------------
 
-func (p NodeSet) CollectOne(exactly ...bool) (item *html.Node, err error) {
+func (p NodeSet) CollectOne__1(exactly bool) (item *html.Node, err error) {
 	if p.Err != nil {
 		return nil, p.Err
 	}
 	err = ErrNotFound
-	if exactly != nil && exactly[0] {
+	if exactly {
 		p.Data.ForEach(func(node *html.Node) error {
 			if err == ErrNotFound {
 				item, err = node, nil
@@ -516,6 +516,10 @@ func (p NodeSet) CollectOne(exactly ...bool) (item *html.Node, err error) {
 		})
 	}
 	return
+}
+
+func (p NodeSet) CollectOne__0() (item *html.Node, err error) {
+	return p.CollectOne__1(false)
 }
 
 func (p NodeSet) Collect() (items []*html.Node, err error) {

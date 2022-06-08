@@ -23,7 +23,7 @@ import "github.com/goplus/hdq"
 
 func links(url interface{}) []string {
 	doc := hdq.Source(url)
-	return [link for a <- doc.any.a, link := a.href?:""; link != ""]
+	return [link for a <- doc.any.a if link := a.href?:""; link != ""]
 }
 ```
 

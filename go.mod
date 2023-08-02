@@ -4,5 +4,5 @@ go 1.16
 
 require (
 	github.com/goplus/gop v1.1.2
-	golang.org/x/net v0.10.0
+	golang.org/x/net v0.13.0
 )

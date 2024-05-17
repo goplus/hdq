@@ -13,34 +13,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package torch
+package hdq_test
 
 import (
-	"strings"
+	"testing"
 
 	"github.com/goplus/hdq"
+	"github.com/goplus/hdq/hdqtest"
+	"github.com/goplus/hdq/pysig/torch"
 )
 
-// -----------------------------------------------------------------------------
-
-const (
-	spaces = " \t\r\n¶"
-)
-
-type Result struct {
-	Name string `json:"name"`
-	Doc  string `json:"doc"`
-	Sig  string `json:"sig"`
+func textOf(doc hdq.NodeSet) (ret string) {
+	ret, _ = doc.Text__0()
+	return
 }
 
-func New(doc hdq.NodeSet) Result {
-	fn := doc.any.dl.class("py function")
-	decl := fn.firstElementChild.dt.text!
-	pos := strings.indexByte(decl, '(')
-	if pos > 0 {
-		name := strings.trimPrefix(decl[:pos], "torch.")
-		sig := decl[pos:]
-		return {strings.trimSpace(name), "", strings.trimRight(sig, spaces)}
-	}
-	return {"", "", "<NULL>"}
+func TestText(t *testing.T) {
+	hdqtest.FromDir(t, "", "./_testdata/text", textOf)
+}
+
+func TestTestdata(t *testing.T) {
+	hdqtest.FromDir(t, "", "./pysig/torch/_testdata", torch.New)
 }

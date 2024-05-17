@@ -74,6 +74,10 @@ func lastChild(node *html.Node, nodeType html.NodeType) (p *html.Node, err error
 
 // -----------------------------------------------------------------------------
 
+const (
+	spaces = " \t\r\n"
+)
+
 // childEqualText returns true if the type of node's child is TextNode and it's Data equals `text`.
 func childEqualText(node *html.Node, text string) bool {
 	p := node.FirstChild
@@ -104,7 +108,7 @@ func hasPrefixText(node *html.Node, text string) bool {
 	if node.Type != html.TextNode {
 		return false
 	}
-	return strings.Contains(strings.TrimLeft(node.Data, " \t\r\n"), text)
+	return strings.Contains(strings.TrimLeft(node.Data, spaces), text)
 }
 
 // exactText returns text of node if the type of node is TextNode.
@@ -125,18 +129,20 @@ func textOf(node *html.Node) string {
 type textPrinter struct {
 	data         []byte
 	notLineStart bool
+	hasSpace     bool
 }
 
-func (p *textPrinter) printText(v string) {
+func (p *textPrinter) printText(v string, hasRightSpace bool) {
 	if v == "" {
 		return
 	}
-	if p.notLineStart {
+	if p.notLineStart && p.hasSpace {
 		p.data = append(p.data, ' ')
 	} else {
 		p.notLineStart = true
 	}
 	p.data = append(p.data, v...)
+	p.hasSpace = hasRightSpace
 }
 
 func (p *textPrinter) printNode(node *html.Node) {
@@ -144,7 +150,7 @@ func (p *textPrinter) printNode(node *html.Node) {
 		return
 	}
 	if node.Type == html.TextNode {
-		p.printText(strings.Trim(node.Data, " \t\r\n¶"))
+		p.printText(textTrimRight(textTrimLeft(node.Data, &p.hasSpace)))
 		return
 	}
 	for child := node.FirstChild; child != nil; child = child.NextSibling {
@@ -155,6 +161,19 @@ func (p *textPrinter) printNode(node *html.Node) {
 		p.data = append(p.data, '\n')
 		p.notLineStart = false
 	}
+}
+
+func textTrimLeft(v string, hasSpace *bool) string {
+	ret := strings.TrimLeft(v, spaces)
+	if len(v) != len(ret) {
+		*hasSpace = true
+	}
+	return ret
+}
+
+func textTrimRight(v string) (string, bool) {
+	ret := strings.TrimRight(v, spaces)
+	return ret, len(v) != len(ret)
 }
 
 // -----------------------------------------------------------------------------

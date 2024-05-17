@@ -3,7 +3,7 @@ _htmlab
 .gop
 coverage.txt
 index.htm
-gop_autogen*.go
+# gop_autogen*.go
 
 # Binaries for programs and plugins
 *.exe

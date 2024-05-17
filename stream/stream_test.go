@@ -15,11 +15,8 @@ package stream
 
 import (
 	"io"
-	"io/ioutil"
 	"strings"
 	"testing"
-
-	_ "github.com/goplus/gop/builtin"
 )
 
 type nilCloser struct {
@@ -41,7 +38,7 @@ func TestBasic(t *testing.T) {
 	if err != nil {
 		t.Fatal("Open failed:", err)
 	}
-	b, err := ioutil.ReadAll(f)
+	b, err := io.ReadAll(f)
 	if err != nil {
 		t.Fatal("ioutil.ReadAll failed:", err)
 	}

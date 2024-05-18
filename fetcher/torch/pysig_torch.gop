@@ -49,8 +49,8 @@ func New(url string, doc hdq.NodeSet) Result {
 }
 
 // URL returns the input URL for the given name.
-func URL(name string) string {
-	return "https://pytorch.org/docs/stable/generated/torch." + name + ".html"
+func URL(name any) string {
+	return "https://pytorch.org/docs/stable/generated/torch." + name.(string) + ".html"
 }
 
 func init() {

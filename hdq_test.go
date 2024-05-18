@@ -16,6 +16,7 @@ limitations under the License.
 package hdq_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/goplus/hdq"
@@ -40,4 +41,29 @@ func TestGithub(t *testing.T) {
 
 func TestTorch(t *testing.T) {
 	hdqtest.FromDir(t, "", "./fetcher/torch/_testdata", torch.New)
+}
+
+func TestSource(t *testing.T) {
+	const data = "<html><body>hello</body></html>"
+	doc := hdq.Source([]byte(data))
+	sources := []any{
+		[]byte(data),
+		strings.NewReader(data),
+		doc,
+	}
+	for _, in := range sources {
+		v := hdq.Source(in)
+		if text, err := v.Text__0(); err != nil || text != "hello" {
+			t.Fatal("Source failed: ", text, err)
+		}
+	}
+	if doc := hdq.Source("unknown:123"); doc.Ok() {
+		t.Fatal("Source failed: no error?")
+	}
+	defer func() {
+		if recover() == nil {
+			t.Fatalf("Source failed: no panic?")
+		}
+	}()
+	hdq.Source(123)
 }

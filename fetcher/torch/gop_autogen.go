@@ -15,8 +15,8 @@ const spaces = " \t\r\n¶"
 
 type Result struct {
 	Name string `json:"name"`
-	Type string `json:"type"`
-	Doc  string `json:"doc"`
+	Type string `json:"type,omitempty"`
+	Doc  string `json:"doc,omitempty"`
 	Sig  string `json:"sig"`
 	URL  string `json:"url,omitempty"`
 }

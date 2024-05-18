@@ -17,7 +17,7 @@ type Result struct {
 	Name string `json:"name"`
 	Doc  string `json:"doc"`
 	Sig  string `json:"sig"`
-	URL  string `json:"url"`
+	URL  string `json:"url,omitempty"`
 }
 //line fetcher/torch/pysig_torch.gop:38:1
 // New creates a new Result from a html document.

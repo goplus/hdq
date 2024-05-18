@@ -118,35 +118,36 @@ func newRepo(node hdq.NodeSet) Repo {
 	return Repo{Repo: repo, ForkedFrom: forkedFrom, Title: title, Language: language, UpdateTime: updateTime, Forks: forks}
 }
 //line tutorial/02-GithubRepos/repos.gop:44:1
+// New creates a new Result from a html document.
 func New(doc hdq.NodeSet) Result {
-//line tutorial/02-GithubRepos/repos.gop:45:1
-	divRepos := doc.Any().Div().Id("user-repositories-list").One()
 //line tutorial/02-GithubRepos/repos.gop:46:1
+	divRepos := doc.Any().Div().Id("user-repositories-list").One()
+//line tutorial/02-GithubRepos/repos.gop:47:1
 	repoList := divRepos.Child().Ul().One()
-//line tutorial/02-GithubRepos/repos.gop:47:1
+//line tutorial/02-GithubRepos/repos.gop:48:1
 	repos := func() (_gop_ret []Repo) {
-//line tutorial/02-GithubRepos/repos.gop:47:1
+//line tutorial/02-GithubRepos/repos.gop:48:1
 		repoList.Child().Li().Gop_Enum(func(x hdq.NodeSet) {
-//line tutorial/02-GithubRepos/repos.gop:47:1
+//line tutorial/02-GithubRepos/repos.gop:48:1
 			_gop_ret = append(_gop_ret, newRepo(x))
 		})
-//line tutorial/02-GithubRepos/repos.gop:47:1
-		return
-	}()
-//line tutorial/02-GithubRepos/repos.gop:48:1
-	next := func() (_gop_ret string) {
-//line tutorial/02-GithubRepos/repos.gop:48:1
-		var _gop_err error
-//line tutorial/02-GithubRepos/repos.gop:48:1
-		_gop_ret, _gop_err = doc.Any().Div().Class("paginate-container").One().Any().A().ChildEqualText("Next").Href__0()
-//line tutorial/02-GithubRepos/repos.gop:48:1
-		if _gop_err != nil {
-//line tutorial/02-GithubRepos/repos.gop:48:1
-			return ""
-		}
 //line tutorial/02-GithubRepos/repos.gop:48:1
 		return
 	}()
 //line tutorial/02-GithubRepos/repos.gop:49:1
+	next := func() (_gop_ret string) {
+//line tutorial/02-GithubRepos/repos.gop:49:1
+		var _gop_err error
+//line tutorial/02-GithubRepos/repos.gop:49:1
+		_gop_ret, _gop_err = doc.Any().Div().Class("paginate-container").One().Any().A().ChildEqualText("Next").Href__0()
+//line tutorial/02-GithubRepos/repos.gop:49:1
+		if _gop_err != nil {
+//line tutorial/02-GithubRepos/repos.gop:49:1
+			return ""
+		}
+//line tutorial/02-GithubRepos/repos.gop:49:1
+		return
+	}()
+//line tutorial/02-GithubRepos/repos.gop:50:1
 	return Result{Repos: repos, Next: next}
 }

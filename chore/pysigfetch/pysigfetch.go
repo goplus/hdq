@@ -13,14 +13,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package torch
+package main
 
 import (
-	"testing"
+	"encoding/json"
+	"fmt"
+	"os"
 
-	"github.com/goplus/hdq/hdqtest"
+	"github.com/goplus/hdq/fetcher"
+	_ "github.com/goplus/hdq/fetcher/torch"
 )
 
-func TestTestdata(t *testing.T) {
-	hdqtest.FromDir(t, "", "./_testdata", New)
+type module struct {
+	Name  string `json:"name"`
+	Items []any  `json:"items"`
+}
+
+// Usage: pysigfetch pageType [name ...]
+func main() {
+	if len(os.Args) < 3 {
+		fmt.Fprintln(os.Stderr, "Usage: pysigfetch pageType [name ...]")
+		os.Exit(1)
+	}
+	pageType := os.Args[1]
+	names := os.Args[2:]
+	docs := make([]any, len(names))
+	for i, name := range names {
+		docs[i] = fetcher.FromInput(pageType, name)
+	}
+	json.NewEncoder(os.Stdout).Encode(module{pageType, docs})
 }

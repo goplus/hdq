@@ -24,15 +24,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/goplus/hdq"
+	"github.com/goplus/hdq/fetcher"
 )
-
-// func(doc hdq.NodeSet) any
-type Converter = any
 
 // FromDir tests all html files in a directory.
 // optional params: [filename, scheme]
-func FromDir(t *testing.T, sel, relDir string, conv Converter, params ...string) {
+func FromDir(t *testing.T, sel, relDir string, conv fetcher.Conv, params ...string) {
 	dir, err := os.Getwd()
 	if err != nil {
 		t.Fatal("Getwd failed:", err)
@@ -73,16 +70,9 @@ func testFrom(t *testing.T, pkgDir, sel string, conv reflect.Value, fname, schem
 		t.Fatal("ReadFile failed:", err)
 	}
 	expected := string(b)
-	ret := ConvFile(in, conv)
+	ret := fetcher.Convert(conv, in)
 	retb, _ := json.MarshalIndent(ret, "", "\t")
 	if v := string(retb); v != expected {
 		t.Fatalf("\n==> got:\n%s\n==> expected:\n%s\n", v, expected)
 	}
-}
-
-// ConvFile converts a html source to an object.
-func ConvFile(in any, conv reflect.Value) any {
-	doc := reflect.ValueOf(hdq.Source(in))
-	out := conv.Call([]reflect.Value{doc})
-	return out[0].Interface()
 }

@@ -16,31 +16,17 @@ limitations under the License.
 package torch
 
 import (
-	"strings"
+	"testing"
 
-	"github.com/goplus/hdq"
+	"github.com/goplus/hdq/hdqtest"
 )
 
-// -----------------------------------------------------------------------------
-
-const (
-	spaces = " \t\r\n¶"
-)
-
-type Result struct {
-	Name string `json:"name"`
-	Doc  string `json:"doc"`
-	Sig  string `json:"sig"`
+func TestTestdata(t *testing.T) {
+	hdqtest.FromDir(t, "", "./_testdata", New)
 }
 
-func New(doc hdq.NodeSet) Result {
-	fn := doc.any.dl.class("py function")
-	decl := fn.firstElementChild.dt.text!
-	pos := strings.indexByte(decl, '(')
-	if pos > 0 {
-		name := strings.trimPrefix(decl[:pos], "torch.")
-		sig := decl[pos:]
-		return {strings.trimSpace(name), "", strings.trimRight(sig, spaces)}
+func TestInput(t *testing.T) {
+	if v := Input("eye"); v != "https://pytorch.org/docs/stable/generated/torch.eye.html" {
+		t.Fatal(v)
 	}
-	return {"", "", "<NULL>"}
 }

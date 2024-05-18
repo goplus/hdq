@@ -55,6 +55,7 @@ type cachedGetter interface {
 	Cached() int
 }
 
+// NodeSet represents a set of nodes.
 type NodeSet struct {
 	Data NodeEnum
 	Err  error
@@ -83,6 +84,8 @@ func Source(r interface{}) (ret NodeSet) {
 		return New(r)
 	case io.Reader:
 		return New(v)
+	case NodeSet: // input is a node set
+		return v
 	default:
 		panic("unsupport source type")
 	}
@@ -167,6 +170,7 @@ func (p *fixNodes) Cached() int {
 	return len(p.nodes)
 }
 
+// Nodes creates a node set from the given nodes.
 func Nodes(nodes ...*html.Node) (ret NodeSet) {
 	return NodeSet{Data: &fixNodes{nodes}}
 }
@@ -204,6 +208,7 @@ func anyForEach(p *html.Node, filter func(node *html.Node) error) error {
 	return nil
 }
 
+// Any returns the all nodes as a node set.
 func (p NodeSet) Any() (ret NodeSet) {
 	if p.Err != nil {
 		return p
@@ -258,10 +263,12 @@ func parentLevelForEach(p *html.Node, level int, filter func(node *html.Node) er
 	return filter(p)
 }
 
+// Child returns the child node set. It is equivalent to ChildN(1).
 func (p NodeSet) Child() (ret NodeSet) {
 	return p.ChildN(1)
 }
 
+// ChildN returns the child node set at the given level.
 func (p NodeSet) ChildN(level int) (ret NodeSet) {
 	if p.Err != nil || level == 0 {
 		return p
@@ -272,14 +279,17 @@ func (p NodeSet) ChildN(level int) (ret NodeSet) {
 	return NodeSet{Data: &parentLevelNodes{p.Data, level}}
 }
 
+// Parent returns the parent node set. It is equivalent to ParentN(1).
 func (p NodeSet) Parent() (ret NodeSet) {
 	return p.ChildN(-1)
 }
 
+// ParentN returns the parent node set at the given level.
 func (p NodeSet) ParentN(level int) (ret NodeSet) {
 	return p.ChildN(-level)
 }
 
+// One returns the first node as a node set.
 func (p NodeSet) One() (ret NodeSet) {
 	if _, ok := p.Data.(oneNode); ok {
 		return p
@@ -459,6 +469,7 @@ func (p *matchedNodes) ForEach(filter func(node *html.Node) error) {
 	})
 }
 
+// Match returns the matched node set.
 func (p NodeSet) Match(filter func(node *html.Node) bool) (ret NodeSet) {
 	if p.Err != nil {
 		return p
@@ -497,6 +508,8 @@ func (p NodeSet) ChildrenAsText(doReplace bool) (ret NodeSet) {
 
 // -----------------------------------------------------------------------------
 
+// CollectOne returns the first node.
+// If `exactly` is true, it will return an error if there are more than one node.
 func (p NodeSet) CollectOne__1(exactly bool) (item *html.Node, err error) {
 	if p.Err != nil {
 		return nil, p.Err
@@ -520,10 +533,12 @@ func (p NodeSet) CollectOne__1(exactly bool) (item *html.Node, err error) {
 	return
 }
 
+// CollectOne returns the first node.
 func (p NodeSet) CollectOne__0() (item *html.Node, err error) {
 	return p.CollectOne__1(false)
 }
 
+// Collect returns all nodes.
 func (p NodeSet) Collect() (items []*html.Node, err error) {
 	if p.Err != nil {
 		return nil, p.Err

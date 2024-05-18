@@ -41,6 +41,7 @@ type Result struct {
 	Next  string
 }
 
+// New creates a new Result from a html document.
 func New(doc hdq.NodeSet) Result {
 	divRepos := doc.any.div.id("user-repositories-list").one
 	repoList := divRepos.child.ul.one

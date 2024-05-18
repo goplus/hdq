@@ -32,28 +32,29 @@ type Result struct {
 	Name string `json:"name"`
 	Doc  string `json:"doc"`
 	Sig  string `json:"sig"`
+	URL  string `json:"url"`
 }
 
 // New creates a new Result from a html document.
-func New(doc hdq.NodeSet) Result {
+func New(url string, doc hdq.NodeSet) Result {
 	fn := doc.any.dl.class("py function")
 	decl := fn.firstElementChild.dt.text!
 	pos := strings.indexByte(decl, '(')
 	if pos > 0 {
 		name := strings.trimPrefix(decl[:pos], "torch.")
 		sig := decl[pos:]
-		return {strings.trimSpace(name), "", strings.trimRight(sig, spaces)}
+		return {strings.trimSpace(name), "", strings.trimRight(sig, spaces), url}
 	}
-	return {"", "", "<NULL>"}
+	return {"", "", "<NULL>", url}
 }
 
-// Input returns the input URL for the given name.
-func Input(name string) any {
+// URL returns the input URL for the given name.
+func URL(name string) string {
 	return "https://pytorch.org/docs/stable/generated/torch." + name + ".html"
 }
 
 func init() {
-	fetcher.Register("torch", New, Input)
+	fetcher.Register("torch", New, URL)
 }
 
 // -----------------------------------------------------------------------------

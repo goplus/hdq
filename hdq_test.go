@@ -26,7 +26,7 @@ import (
 	repos "github.com/goplus/hdq/tutorial/02-GithubRepos"
 )
 
-func textOf(doc hdq.NodeSet) (ret string) {
+func textOf(_ string, doc hdq.NodeSet) (ret string) {
 	ret, _ = doc.Text__0()
 	return
 }

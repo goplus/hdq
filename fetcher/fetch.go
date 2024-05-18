@@ -21,27 +21,27 @@ import (
 	"github.com/goplus/hdq"
 )
 
-// func(doc hdq.NodeSet) <any-object>
+// func(url string, doc hdq.NodeSet) <any-object>
 type Conv = any
 
 // -----------------------------------------------------------------------------
 
 // Convert converts a html source to an object.
-func Convert(conv reflect.Value, in any) any {
+func Convert(conv reflect.Value, url string, in any) any {
 	doc := reflect.ValueOf(hdq.Source(in))
-	out := conv.Call([]reflect.Value{doc})
+	out := conv.Call([]reflect.Value{reflect.ValueOf(url), doc})
 	return out[0].Interface()
 }
 
 // -----------------------------------------------------------------------------
 
 // New creates a new object from a html source by a registered converter.
-func New(pageType string, in any) any {
+func New(pageType string, url string, in any) any {
 	page, ok := convs[pageType]
 	if !ok {
 		panic("fetcher: unknown pageType - " + pageType)
 	}
-	return Convert(page.Conv, in)
+	return Convert(page.Conv, url, in)
 }
 
 // FromInput creates a new object from the html source with the specified input name.
@@ -50,14 +50,14 @@ func FromInput(pageType string, input string) any {
 	if !ok {
 		panic("fetcher: unknown pageType - " + pageType)
 	}
-	in := page.Input(input)
-	return Convert(page.Conv, in)
+	url := page.URL(input)
+	return Convert(page.Conv, url, url)
 }
 
 // sitePageType represents a site page type.
 type sitePageType struct {
-	Conv  reflect.Value
-	Input func(string) any
+	Conv reflect.Value
+	URL  func(string) string
 }
 
 var (
@@ -65,9 +65,9 @@ var (
 )
 
 // Register registers a convType with a convert function.
-func Register(pageType string, conv Conv, input func(string) any) {
+func Register(pageType string, conv Conv, urlOf func(string) string) {
 	vConv := reflect.ValueOf(conv)
-	convs[pageType] = sitePageType{vConv, input}
+	convs[pageType] = sitePageType{vConv, urlOf}
 }
 
 // -----------------------------------------------------------------------------

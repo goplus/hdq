@@ -70,7 +70,7 @@ func testFrom(t *testing.T, pkgDir, sel string, conv reflect.Value, fname, schem
 		t.Fatal("ReadFile failed:", err)
 	}
 	expected := string(b)
-	ret := fetcher.Convert(conv, in)
+	ret := fetcher.Convert(conv, in, in)
 	retb, _ := json.MarshalIndent(ret, "", "\t")
 	if v := string(retb); v != expected {
 		t.Fatalf("\n==> got:\n%s\n==> expected:\n%s\n", v, expected)

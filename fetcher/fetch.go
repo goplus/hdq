@@ -16,6 +16,7 @@ limitations under the License.
 package fetcher
 
 import (
+	"errors"
 	"reflect"
 
 	"github.com/goplus/hdq"
@@ -35,23 +36,27 @@ func Convert(conv reflect.Value, input, source any) any {
 
 // -----------------------------------------------------------------------------
 
+var (
+	ErrUnknownPageType = errors.New("unknown page type")
+)
+
 // New creates a new object from a html source by a registered converter.
-func New(pageType string, input, source any) any {
+func New(pageType string, input, source any) (any, error) {
 	page, ok := convs[pageType]
 	if !ok {
-		panic("fetcher: unknown pageType - " + pageType)
+		return nil, ErrUnknownPageType
 	}
-	return Convert(page.Conv, input, source)
+	return Convert(page.Conv, input, source), nil
 }
 
 // FromInput creates a new object from the html source with the specified input.
-func FromInput(pageType string, input any) any {
+func FromInput(pageType string, input any) (any, error) {
 	page, ok := convs[pageType]
 	if !ok {
-		panic("fetcher: unknown pageType - " + pageType)
+		return nil, ErrUnknownPageType
 	}
 	url := page.URL(input)
-	return Convert(page.Conv, input, url)
+	return Convert(page.Conv, input, url), nil
 }
 
 // sitePageType represents a site page type.

@@ -45,10 +45,14 @@ func main() {
 		b, _ := io.ReadAll(os.Stdin)
 		names = strings.Split(strings.TrimSpace(string(b)), " ")
 	}
-	docs := make([]any, len(names))
-	for i, name := range names {
+	var docs = make([]any, 0, len(names))
+	for _, name := range names {
 		log.Println("==> Fetch", name)
-		docs[i] = fetcher.FromInput(moduleName, name)
+		doc, err := fetcher.FromInput(moduleName, name)
+		if err == fetcher.ErrUnknownPageType {
+			break
+		}
+		docs = append(docs, doc)
 	}
 	json.NewEncoder(os.Stdout).Encode(module{moduleName, docs})
 }

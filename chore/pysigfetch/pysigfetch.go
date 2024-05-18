@@ -13,31 +13,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package hdq_test
+package main
 
 import (
-	"testing"
+	"encoding/json"
+	"fmt"
+	"os"
 
-	"github.com/goplus/hdq"
-	"github.com/goplus/hdq/fetcher/torch"
-	"github.com/goplus/hdq/hdqtest"
-
-	repos "github.com/goplus/hdq/tutorial/02-GithubRepos"
+	"github.com/goplus/hdq/fetcher"
+	_ "github.com/goplus/hdq/fetcher/torch"
 )
 
-func textOf(doc hdq.NodeSet) (ret string) {
-	ret, _ = doc.Text__0()
-	return
+type module struct {
+	Name  string `json:"name"`
+	Items []any  `json:"items"`
 }
 
-func TestText(t *testing.T) {
-	hdqtest.FromDir(t, "", "./_testdata/text", textOf)
-}
-
-func TestGithub(t *testing.T) {
-	hdqtest.FromDir(t, "", "./_testdata/github", repos.New, "data.zip#index.htm", "zip")
-}
-
-func TestTorch(t *testing.T) {
-	hdqtest.FromDir(t, "", "./fetcher/torch/_testdata", torch.New)
+// Usage: pysigfetch pageType [name ...]
+func main() {
+	if len(os.Args) < 3 {
+		fmt.Fprintln(os.Stderr, "Usage: pysigfetch pageType [name ...]")
+		os.Exit(1)
+	}
+	pageType := os.Args[1]
+	names := os.Args[2:]
+	docs := make([]any, len(names))
+	for i, name := range names {
+		docs[i] = fetcher.FromInput(pageType, name)
+	}
+	json.NewEncoder(os.Stdout).Encode(module{pageType, docs})
 }

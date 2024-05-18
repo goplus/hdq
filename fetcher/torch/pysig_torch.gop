@@ -19,6 +19,7 @@ import (
 	"strings"
 
 	"github.com/goplus/hdq"
+	"github.com/goplus/hdq/fetcher"
 )
 
 // -----------------------------------------------------------------------------
@@ -33,6 +34,7 @@ type Result struct {
 	Sig  string `json:"sig"`
 }
 
+// New creates a new Result from a html document.
 func New(doc hdq.NodeSet) Result {
 	fn := doc.any.dl.class("py function")
 	decl := fn.firstElementChild.dt.text!
@@ -44,3 +46,14 @@ func New(doc hdq.NodeSet) Result {
 	}
 	return {"", "", "<NULL>"}
 }
+
+// Input returns the input URL for the given name.
+func Input(name string) any {
+	return "https://pytorch.org/docs/stable/generated/torch." + name + ".html"
+}
+
+func init() {
+	fetcher.Register("torch", New, Input)
+}
+
+// -----------------------------------------------------------------------------

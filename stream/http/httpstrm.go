@@ -30,16 +30,8 @@ var (
 
 // -------------------------------------------------------------------------------------
 
-// Open opens a zipped file object.
-func Open(file string) (io.ReadCloser, error) {
-	return httpOpen("http://" + file)
-}
-
-func Opens(file string) (io.ReadCloser, error) {
-	return httpOpen("https://" + file)
-}
-
-func httpOpen(url string) (io.ReadCloser, error) {
+// Open opens a http file object.
+func Open(url string) (io.ReadCloser, error) {
 	resp, err := httpGet(url)
 	if err != nil {
 		return nil, err
@@ -62,9 +54,8 @@ func httpGet(url string) (resp *http.Response, err error) {
 }
 
 func init() {
-	// http://path, https://path
-	stream.RegisterSchema("http", Open)
-	stream.RegisterSchema("https", Opens)
+	stream.Register("http", Open)
+	stream.Register("https", Open)
 }
 
 // -------------------------------------------------------------------------------------

@@ -13,34 +13,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package torch
+package inline
 
 import (
+	"io"
 	"strings"
 
-	"github.com/goplus/hdq"
+	"github.com/goplus/hdq/stream"
 )
 
-// -----------------------------------------------------------------------------
-
-const (
-	spaces = " \t\r\n¶"
-)
-
-type Result struct {
-	Name string `json:"name"`
-	Doc  string `json:"doc"`
-	Sig  string `json:"sig"`
+type nilCloser struct {
+	io.Reader
 }
 
-func New(doc hdq.NodeSet) Result {
-	fn := doc.any.dl.class("py function")
-	decl := fn.firstElementChild.dt.text!
-	pos := strings.indexByte(decl, '(')
-	if pos > 0 {
-		name := strings.trimPrefix(decl[:pos], "torch.")
-		sig := decl[pos:]
-		return {strings.trimSpace(name), "", strings.trimRight(sig, spaces)}
-	}
-	return {"", "", "<NULL>"}
+func (p *nilCloser) Close() error {
+	return nil
+}
+
+// Open opens a inline text object.
+func Open(url string) (io.ReadCloser, error) {
+	file := strings.TrimPrefix(url, "inline:")
+	r := strings.NewReader(file)
+	return &nilCloser{r}, nil
+}
+
+func init() {
+	stream.Register("inline", Open)
 }

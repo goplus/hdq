@@ -37,7 +37,8 @@ func (p *readCloser) Close() error {
 }
 
 // Open opens a zipped file object.
-func Open(file string) (io.ReadCloser, error) {
+func Open(url string) (io.ReadCloser, error) {
+	file := strings.TrimPrefix(url, "zip:")
 	pos := strings.Index(file, "#")
 	if pos <= 0 {
 		return nil, syscall.EINVAL
@@ -60,8 +61,8 @@ func Open(file string) (io.ReadCloser, error) {
 }
 
 func init() {
-	// zip://file#index.htm
-	stream.RegisterSchema("zip", Open)
+	// zip:file#index.htm
+	stream.Register("zip", Open)
 }
 
 // -------------------------------------------------------------------------------------

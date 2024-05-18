@@ -18,43 +18,47 @@ package stream
 import (
 	"errors"
 	"io"
+	"io/fs"
 	"os"
 	"strings"
 )
 
-// -------------------------------------------------------------------------------------
-
-func SplitSchema(path string) (schema, file string) {
-	idx := strings.IndexAny(path, ":/\\ ")
-	if idx < 0 || path[idx] != ':' {
-		return "", path
-	}
-	schema, file = path[:idx], path[idx+1:]
-	file = strings.TrimPrefix(file, "//")
-	return
-}
+var (
+	ErrUnknownScheme = errors.New("unknown scheme")
+)
 
 // -------------------------------------------------------------------------------------
 
 type OpenFunc = func(file string) (io.ReadCloser, error)
 
 var (
-	openSchemas = map[string]OpenFunc{}
+	openers = map[string]OpenFunc{}
 )
 
-func RegisterSchema(schema string, open OpenFunc) {
-	openSchemas[schema] = open
+// Register registers a scheme with an open function.
+func Register(scheme string, open OpenFunc) {
+	openers[scheme] = open
 }
 
-func Open(path string) (io.ReadCloser, error) {
-	schema, file := SplitSchema(path)
-	if schema == "" {
-		return os.Open(path)
+func Open(url string) (io.ReadCloser, error) {
+	scheme := schemeOf(url)
+	if scheme == "" {
+		return os.Open(url)
 	}
-	if open, ok := openSchemas[schema]; ok {
-		return open(file)
+	if open, ok := openers[scheme]; ok {
+		return open(url)
 	}
-	return nil, errors.New("stream.Open: unsupported schema - " + schema)
+	return nil, &fs.PathError{Op: "hdq/stream.Open", Err: ErrUnknownScheme, Path: url}
+}
+
+func schemeOf(url string) (scheme string) {
+	pos := strings.IndexAny(url, ":/")
+	if pos > 0 {
+		if url[pos] == ':' {
+			return url[:pos]
+		}
+	}
+	return ""
 }
 
 // -------------------------------------------------------------------------------------

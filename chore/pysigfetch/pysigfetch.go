@@ -29,17 +29,17 @@ type module struct {
 	Items []any  `json:"items"`
 }
 
-// Usage: pysigfetch pageType [name ...]
+// Usage: pysigfetch module [name ...]
 func main() {
 	if len(os.Args) < 3 {
-		fmt.Fprintln(os.Stderr, "Usage: pysigfetch pageType [name ...]")
+		fmt.Fprintln(os.Stderr, "Usage: pysigfetch module [name ...]")
 		os.Exit(1)
 	}
-	pageType := os.Args[1]
+	moduleName := os.Args[1]
 	names := os.Args[2:]
 	docs := make([]any, len(names))
 	for i, name := range names {
-		docs[i] = fetcher.FromInput(pageType, name)
+		docs[i] = fetcher.FromInput(moduleName, name)
 	}
-	json.NewEncoder(os.Stdout).Encode(module{pageType, docs})
+	json.NewEncoder(os.Stdout).Encode(module{moduleName, docs})
 }

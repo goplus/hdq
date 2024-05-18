@@ -67,3 +67,19 @@ func TestSource(t *testing.T) {
 	}()
 	hdq.Source(123)
 }
+
+func TestErrNodeSet(t *testing.T) {
+	doc := hdq.NodeSet{Err: hdq.ErrInvalidNode}
+	fns := []func() hdq.NodeSet{
+		doc.Child,
+		doc.Parent,
+		doc.PrevSiblings,
+		doc.NextSiblings,
+		doc.Any,
+	}
+	for _, fn := range fns {
+		if v := fn(); v != doc {
+			t.Fatal("ErrNodeSet failed:", v)
+		}
+	}
+}

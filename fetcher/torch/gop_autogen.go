@@ -35,7 +35,7 @@ func New(input interface{}, doc hdq.NodeSet) Result {
 //line fetcher/torch/pysig_torch.gop:46:1
 	if doc.Ok() {
 //line fetcher/torch/pysig_torch.gop:47:1
-		fn := doc.Any().Dl().Class("py function")
+		fn := doc.Any().Dl().Class("py function").One()
 //line fetcher/torch/pysig_torch.gop:48:1
 		decl := func() (_gop_ret string) {
 //line fetcher/torch/pysig_torch.gop:48:1

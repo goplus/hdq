@@ -13,31 +13,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package hdq_test
+package inline
 
 import (
-	"testing"
+	"io"
+	"strings"
 
-	"github.com/goplus/hdq"
-	"github.com/goplus/hdq/hdqtest"
-	"github.com/goplus/hdq/pysig/torch"
-
-	repos "github.com/goplus/hdq/tutorial/02-GithubRepos"
+	"github.com/goplus/hdq/stream"
 )
 
-func textOf(doc hdq.NodeSet) (ret string) {
-	ret, _ = doc.Text__0()
-	return
+type nilCloser struct {
+	io.Reader
 }
 
-func TestText(t *testing.T) {
-	hdqtest.FromDir(t, "", "./_testdata/text", textOf)
+func (p *nilCloser) Close() error {
+	return nil
 }
 
-func TestGithub(t *testing.T) {
-	hdqtest.FromDir(t, "", "./_testdata/github", repos.New, "data.zip#index.htm", "zip")
+// Open opens a inline text object.
+func Open(url string) (io.ReadCloser, error) {
+	file := strings.TrimPrefix(url, "inline:")
+	r := strings.NewReader(file)
+	return &nilCloser{r}, nil
 }
 
-func TestTorch(t *testing.T) {
-	hdqtest.FromDir(t, "", "./pysig/torch/_testdata", torch.New)
+func init() {
+	stream.Register("inline", Open)
 }

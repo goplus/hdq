@@ -13,30 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package stream
+package stream_test
 
 import (
 	"io"
-	"strings"
 	"testing"
+
+	"github.com/goplus/hdq/stream"
+	_ "github.com/goplus/hdq/stream/inline"
 )
 
-type nilCloser struct {
-	io.Reader
-}
-
-func (p *nilCloser) Close() error {
-	return nil
-}
-
-func inlOpen(file string) (io.ReadCloser, error) {
-	r := strings.NewReader(file)
-	return &nilCloser{r}, nil
-}
-
 func TestBasic(t *testing.T) {
-	RegisterSchema("inl", inlOpen)
-	f, err := Open("inl://hello")
+	f, err := stream.Open("inline:hello")
 	if err != nil {
 		t.Fatal("Open failed:", err)
 	}
@@ -49,15 +37,15 @@ func TestBasic(t *testing.T) {
 	}
 }
 
-func TestUnknownSchema(t *testing.T) {
-	_, err := Open("bad://foo")
-	if err == nil || err.Error() != "stream.Open: unsupported schema - bad" {
+func TestUnknownScheme(t *testing.T) {
+	_, err := stream.Open("bad://foo")
+	if err == nil || err.Error() != "hdq/stream.Open bad://foo: unknown scheme" {
 		t.Fatal("Open failed:", err)
 	}
 }
 
 func TestOpenFile(t *testing.T) {
-	_, err := Open("/bin/not-exists/foo")
+	_, err := stream.Open("/bin/not-exists/foo")
 	if err == nil {
 		t.Fatal("Open local file success?")
 	}

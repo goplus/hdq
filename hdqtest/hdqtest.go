@@ -31,7 +31,8 @@ import (
 type Converter = any
 
 // FromDir tests all html files in a directory.
-func FromDir(t *testing.T, sel, relDir string, conv Converter) {
+// optional params: [filename, scheme]
+func FromDir(t *testing.T, sel, relDir string, conv Converter, params ...string) {
 	dir, err := os.Getwd()
 	if err != nil {
 		t.Fatal("Getwd failed:", err)
@@ -42,23 +43,30 @@ func FromDir(t *testing.T, sel, relDir string, conv Converter) {
 		t.Fatal("ReadDir failed:", err)
 	}
 	vConv := reflect.ValueOf(conv)
+	scheme, fname := "", "/in.html"
+	if len(params) > 0 {
+		fname = "/" + params[0]
+		if len(params) > 1 {
+			scheme = params[1] + ":"
+		}
+	}
 	for _, fi := range fis {
 		name := fi.Name()
 		if !fi.IsDir() || strings.HasPrefix(name, "_") {
 			continue
 		}
 		t.Run(name, func(t *testing.T) {
-			testFrom(t, dir+"/"+name, sel, vConv)
+			testFrom(t, dir+"/"+name, sel, vConv, fname, scheme)
 		})
 	}
 }
 
-func testFrom(t *testing.T, pkgDir, sel string, conv reflect.Value) {
+func testFrom(t *testing.T, pkgDir, sel string, conv reflect.Value, fname, scheme string) {
 	if sel != "" && !strings.Contains(pkgDir, sel) {
 		return
 	}
 	log.Println("Parsing", pkgDir)
-	in := pkgDir + "/in.html"
+	in := scheme + pkgDir + fname
 	out := pkgDir + "/out.json"
 	b, err := os.ReadFile(out)
 	if err != nil {

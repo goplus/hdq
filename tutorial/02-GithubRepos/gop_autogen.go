@@ -119,7 +119,7 @@ func newRepo(node hdq.NodeSet) Repo {
 }
 //line tutorial/02-GithubRepos/repos.gop:44:1
 // New creates a new Result from a html document.
-func New(url string, doc hdq.NodeSet) Result {
+func New(_ interface{}, doc hdq.NodeSet) Result {
 //line tutorial/02-GithubRepos/repos.gop:46:1
 	divRepos := doc.Any().Div().Id("user-repositories-list").One()
 //line tutorial/02-GithubRepos/repos.gop:47:1

@@ -27,8 +27,8 @@ type Conv = any
 // -----------------------------------------------------------------------------
 
 // Convert converts a html source to an object.
-func Convert(conv reflect.Value, url string, in any) any {
-	doc := reflect.ValueOf(hdq.Source(in))
+func Convert(conv reflect.Value, url string, source any) any {
+	doc := reflect.ValueOf(hdq.Source(source))
 	out := conv.Call([]reflect.Value{reflect.ValueOf(url), doc})
 	return out[0].Interface()
 }
@@ -36,16 +36,16 @@ func Convert(conv reflect.Value, url string, in any) any {
 // -----------------------------------------------------------------------------
 
 // New creates a new object from a html source by a registered converter.
-func New(pageType string, url string, in any) any {
+func New(pageType string, url string, source any) any {
 	page, ok := convs[pageType]
 	if !ok {
 		panic("fetcher: unknown pageType - " + pageType)
 	}
-	return Convert(page.Conv, url, in)
+	return Convert(page.Conv, url, source)
 }
 
-// FromInput creates a new object from the html source with the specified input name.
-func FromInput(pageType string, input string) any {
+// FromInput creates a new object from the html source with the specified input.
+func FromInput(pageType string, input any) any {
 	page, ok := convs[pageType]
 	if !ok {
 		panic("fetcher: unknown pageType - " + pageType)
@@ -57,7 +57,7 @@ func FromInput(pageType string, input string) any {
 // sitePageType represents a site page type.
 type sitePageType struct {
 	Conv reflect.Value
-	URL  func(string) string
+	URL  func(any) string
 }
 
 var (
@@ -65,7 +65,7 @@ var (
 )
 
 // Register registers a convType with a convert function.
-func Register(pageType string, conv Conv, urlOf func(string) string) {
+func Register(pageType string, conv Conv, urlOf func(any) string) {
 	vConv := reflect.ValueOf(conv)
 	convs[pageType] = sitePageType{vConv, urlOf}
 }

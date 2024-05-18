@@ -32,7 +32,7 @@ func textOf(_ string, doc hdq.NodeSet) (ret string) {
 }
 
 func TestText(t *testing.T) {
-	hdqtest.FromDir(t, "", "./_testdata/text", textOf)
+	hdqtest.FromDir(t, "", "./_testdata/text", textOf, "data.zip#index.htm", "zip")
 }
 
 func TestGithub(t *testing.T) {
@@ -40,7 +40,7 @@ func TestGithub(t *testing.T) {
 }
 
 func TestTorch(t *testing.T) {
-	hdqtest.FromDir(t, "", "./fetcher/torch/_testdata", torch.New)
+	hdqtest.FromDir(t, "", "./fetcher/torch/_testdata", torch.New, "data.zip#index.htm", "zip")
 }
 
 func TestSource(t *testing.T) {

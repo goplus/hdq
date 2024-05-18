@@ -24,3 +24,9 @@ import (
 func TestTestdata(t *testing.T) {
 	hdqtest.FromDir(t, "", "./_testdata", New)
 }
+
+func TestInput(t *testing.T) {
+	if v := Input("eye"); v != "https://pytorch.org/docs/stable/generated/torch.eye.html" {
+		t.Fatal(v)
+	}
+}

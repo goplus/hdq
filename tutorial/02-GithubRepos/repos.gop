@@ -42,7 +42,7 @@ type Result struct {
 }
 
 // New creates a new Result from a html document.
-func New(doc hdq.NodeSet) Result {
+func New(url string, doc hdq.NodeSet) Result {
 	divRepos := doc.any.div.id("user-repositories-list").one
 	repoList := divRepos.child.ul.one
 	repos := [newRepo(x) for x <- repoList.child.li]

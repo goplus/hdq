@@ -30,22 +30,29 @@ const (
 
 type Result struct {
 	Name string `json:"name"`
-	Doc  string `json:"doc"`
+	Type string `json:"type,omitempty"`
+	Doc  string `json:"doc,omitempty"`
 	Sig  string `json:"sig"`
 	URL  string `json:"url,omitempty"`
 }
 
 // New creates a new Result from a html document.
-func New(url string, doc hdq.NodeSet) Result {
-	fn := doc.any.dl.class("py function")
-	decl := fn.firstElementChild.dt.text!
-	pos := strings.indexByte(decl, '(')
-	if pos > 0 {
-		name := strings.trimPrefix(decl[:pos], "torch.")
-		sig := decl[pos:]
-		return {strings.trimSpace(name), "", strings.trimRight(sig, spaces), url}
+func New(input any, doc hdq.NodeSet) Result {
+	name := input.(string)
+	url := name
+	if name != "" {
+		url = URL(input)
 	}
-	return {"", "", "<NULL>", url}
+	if doc.ok {
+		fn := doc.any.dl.class("py function")
+		decl := fn.firstElementChild.dt.text!
+		pos := strings.indexByte(decl, '(')
+		if pos > 0 {
+			sig := decl[pos:]
+			return {name, "function", "", strings.trimRight(sig, spaces), url}
+		}
+	}
+	return {name, "", "", "<NULL>", url}
 }
 
 // URL returns the input URL for the given name.

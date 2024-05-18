@@ -13,20 +13,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package torch
+package hdq
 
-import (
-	"testing"
+import "testing"
 
-	"github.com/goplus/hdq/hdqtest"
-)
-
-func TestTestdata(t *testing.T) {
-	hdqtest.FromDir(t, "", "./_testdata", New)
-}
-
-func TestURL(t *testing.T) {
-	if v := URL("eye"); v != "https://pytorch.org/docs/stable/generated/torch.eye.html" {
-		t.Fatal(v)
+func TestCached(t *testing.T) {
+	cached := []cachedGetter{
+		new(fixNodes),
+		new(anyNodes),
+		new(oneNode),
+	}
+	for _, v := range cached {
+		v.Cached()
 	}
 }

@@ -16,6 +16,7 @@ limitations under the License.
 package http
 
 import (
+	"errors"
 	"io"
 	"net/http"
 )
@@ -48,7 +49,14 @@ func Get(url string) (resp *http.Response, err error) {
 	if ReqHeaderProc != nil {
 		ReqHeaderProc(req)
 	}
-	return http.DefaultClient.Do(req)
+	if resp, err = http.DefaultClient.Do(req); err != nil {
+		return
+	}
+	if resp.StatusCode/100 != 2 {
+		resp.Body.Close()
+		err = errors.New(resp.Status)
+	}
+	return
 }
 
 // -------------------------------------------------------------------------------------

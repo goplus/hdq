@@ -18,7 +18,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"os"
+	"strings"
 
 	"github.com/goplus/hdq/fetcher"
 	_ "github.com/goplus/hdq/fetcher/torch"
@@ -38,8 +41,13 @@ func main() {
 	}
 	moduleName := os.Args[1]
 	names := os.Args[2:]
+	if len(names) == 1 && names[0] == "-" {
+		b, _ := io.ReadAll(os.Stdin)
+		names = strings.Split(strings.TrimSpace(string(b)), " ")
+	}
 	docs := make([]any, len(names))
 	for i, name := range names {
+		log.Println("==> Fetch", name)
 		docs[i] = fetcher.FromInput(moduleName, name)
 	}
 	json.NewEncoder(os.Stdout).Encode(module{moduleName, docs})

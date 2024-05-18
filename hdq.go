@@ -23,7 +23,6 @@ import (
 	"github.com/goplus/hdq/stream"
 	"golang.org/x/net/html"
 
-	_ "github.com/goplus/hdq/stream/http"
 	_ "github.com/goplus/hdq/stream/zip"
 )
 

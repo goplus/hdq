@@ -22,6 +22,7 @@ import (
 
 	"github.com/goplus/hdq/fetcher"
 	_ "github.com/goplus/hdq/fetcher/torch"
+	_ "github.com/goplus/hdq/stream/http/cached"
 )
 
 type module struct {

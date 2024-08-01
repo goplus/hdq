@@ -24,24 +24,38 @@ import (
 
 func main() {
 	dir := runtime.GOROOT() + "/src/"
-	pkgs := collect(nil, dir, "")
+	fis, err := os.ReadDir(dir)
+	check(err)
+	pkgs := collect(nil, fis, dir, "")
 	fmt.Println(strings.Join(pkgs, "\n"))
 }
 
-func collect(pkgs []string, dir, base string) []string {
-	fis, err := os.ReadDir(dir)
-	check(err)
+func collect(pkgs []string, fis []os.DirEntry, dir, base string) []string {
 	for _, fi := range fis {
 		if !fi.IsDir() {
 			continue
 		}
 		if name := fi.Name(); name != "cmd" && name != "internal" && name != "vendor" && name != "testdata" {
 			nameSlash := name + "/"
-			pkgs = append(pkgs, base+name)
-			pkgs = collect(pkgs, dir+nameSlash, base+nameSlash)
+			pkgDir := dir + nameSlash
+			pkgFis, err := os.ReadDir(pkgDir)
+			check(err)
+			if hasGoFiles(pkgFis) {
+				pkgs = append(pkgs, base+name)
+			}
+			pkgs = collect(pkgs, pkgFis, pkgDir, base+nameSlash)
 		}
 	}
 	return pkgs
+}
+
+func hasGoFiles(fis []os.DirEntry) bool {
+	for _, fi := range fis {
+		if !fi.IsDir() && strings.HasSuffix(fi.Name(), ".go") {
+			return true
+		}
+	}
+	return false
 }
 
 func check(err error) {

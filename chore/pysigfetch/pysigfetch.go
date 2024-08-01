@@ -49,8 +49,8 @@ func main() {
 	for _, name := range names {
 		log.Println("==> Fetch", name)
 		doc, err := fetcher.FromInput(moduleName, name)
-		if err == fetcher.ErrUnknownPageType {
-			break
+		if err != nil {
+			panic(err)
 		}
 		docs = append(docs, doc)
 	}

@@ -25,7 +25,7 @@ import (
 
 	"github.com/goplus/hdq/fetcher"
 	_ "github.com/goplus/hdq/fetcher/hrefs"
-	_ "github.com/goplus/hdq/stream/http/cached"
+	_ "github.com/goplus/hdq/stream/http/nocache"
 )
 
 // Usage: hreflinks [url ...]
@@ -43,8 +43,8 @@ func main() {
 	for _, url := range urls {
 		log.Println("==> Fetch", url)
 		doc, err := fetcher.FromInput("hrefs", url)
-		if err == fetcher.ErrUnknownPageType {
-			break
+		if err != nil {
+			panic(err)
 		}
 		docs = append(docs, doc)
 	}

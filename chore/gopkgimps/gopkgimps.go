@@ -16,7 +16,6 @@ limitations under the License.
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -46,7 +45,10 @@ func main() {
 	sort.Slice(docs, func(i, j int) bool {
 		return docs[i].ImportedBy > docs[j].ImportedBy
 	})
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetIndent("", "  ")
-	enc.Encode(docs)
+	for _, doc := range docs {
+		if doc.ImportedBy == 0 {
+			break
+		}
+		fmt.Printf("- [ ] %s (Imported By: %d)\n", doc.Path, doc.ImportedBy)
+	}
 }

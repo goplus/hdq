@@ -14,7 +14,7 @@ const GopPackage = "github.com/goplus/hdq"
 const _ = true
 
 type Result struct {
-	Name       string `json:"name"`
+	Path       string `json:"path"`
 	ImportedBy int    `json:"importedBy"`
 }
 //line fetcher/gopkg/gopkg_imps.gop:30:1
@@ -23,57 +23,62 @@ func New(input interface{}, doc hdq.NodeSet) Result {
 //line fetcher/gopkg/gopkg_imps.gop:32:1
 	const importedByPrefix = "Imported By:"
 //line fetcher/gopkg/gopkg_imps.gop:33:1
-	name := input.(string)
+	path := input.(string)
 //line fetcher/gopkg/gopkg_imps.gop:34:1
 	a := doc.Any().A().Attribute__1("aria-label", func(v string) bool {
 //line fetcher/gopkg/gopkg_imps.gop:34:1
 		return strings.HasPrefix(v, importedByPrefix)
 	}).One()
 //line fetcher/gopkg/gopkg_imps.gop:35:1
-	label := func() (_gop_ret string) {
-//line fetcher/gopkg/gopkg_imps.gop:35:1
-		var _gop_err error
-//line fetcher/gopkg/gopkg_imps.gop:35:1
-		_gop_ret, _gop_err = a.Attr__0("aria-label")
-//line fetcher/gopkg/gopkg_imps.gop:35:1
-		if _gop_err != nil {
-//line fetcher/gopkg/gopkg_imps.gop:35:1
-			_gop_err = errors.NewFrame(_gop_err, "a.attr(\"aria-label\")", "fetcher/gopkg/gopkg_imps.gop", 35, "gopkg.New")
-//line fetcher/gopkg/gopkg_imps.gop:35:1
-			panic(_gop_err)
-		}
-//line fetcher/gopkg/gopkg_imps.gop:35:1
-		return
-	}()
+	if !a.Ok() {
 //line fetcher/gopkg/gopkg_imps.gop:36:1
-	labelVal := strings.TrimSpace(label[len(importedByPrefix):])
-//line fetcher/gopkg/gopkg_imps.gop:37:1
-	importedBy := func() (_gop_ret int) {
-//line fetcher/gopkg/gopkg_imps.gop:37:1
+		return Result{path, 0}
+	}
+//line fetcher/gopkg/gopkg_imps.gop:38:1
+	label := func() (_gop_ret string) {
+//line fetcher/gopkg/gopkg_imps.gop:38:1
 		var _gop_err error
-//line fetcher/gopkg/gopkg_imps.gop:37:1
-		_gop_ret, _gop_err = strconv.Atoi(strings.ReplaceAll(labelVal, ",", ""))
-//line fetcher/gopkg/gopkg_imps.gop:37:1
+//line fetcher/gopkg/gopkg_imps.gop:38:1
+		_gop_ret, _gop_err = a.Attr__0("aria-label")
+//line fetcher/gopkg/gopkg_imps.gop:38:1
 		if _gop_err != nil {
-//line fetcher/gopkg/gopkg_imps.gop:37:1
-			_gop_err = errors.NewFrame(_gop_err, "strings.replaceAll(labelVal, \",\", \"\").int", "fetcher/gopkg/gopkg_imps.gop", 37, "gopkg.New")
-//line fetcher/gopkg/gopkg_imps.gop:37:1
+//line fetcher/gopkg/gopkg_imps.gop:38:1
+			_gop_err = errors.NewFrame(_gop_err, "a.attr(\"aria-label\")", "fetcher/gopkg/gopkg_imps.gop", 38, "gopkg.New")
+//line fetcher/gopkg/gopkg_imps.gop:38:1
 			panic(_gop_err)
 		}
-//line fetcher/gopkg/gopkg_imps.gop:37:1
+//line fetcher/gopkg/gopkg_imps.gop:38:1
 		return
 	}()
-//line fetcher/gopkg/gopkg_imps.gop:38:1
-	return Result{name, importedBy}
-}
+//line fetcher/gopkg/gopkg_imps.gop:39:1
+	labelVal := strings.TrimSpace(label[len(importedByPrefix):])
+//line fetcher/gopkg/gopkg_imps.gop:40:1
+	importedBy := func() (_gop_ret int) {
+//line fetcher/gopkg/gopkg_imps.gop:40:1
+		var _gop_err error
+//line fetcher/gopkg/gopkg_imps.gop:40:1
+		_gop_ret, _gop_err = strconv.Atoi(strings.ReplaceAll(labelVal, ",", ""))
+//line fetcher/gopkg/gopkg_imps.gop:40:1
+		if _gop_err != nil {
+//line fetcher/gopkg/gopkg_imps.gop:40:1
+			_gop_err = errors.NewFrame(_gop_err, "strings.replaceAll(labelVal, \",\", \"\").int", "fetcher/gopkg/gopkg_imps.gop", 40, "gopkg.New")
+//line fetcher/gopkg/gopkg_imps.gop:40:1
+			panic(_gop_err)
+		}
+//line fetcher/gopkg/gopkg_imps.gop:40:1
+		return
+	}()
 //line fetcher/gopkg/gopkg_imps.gop:41:1
+	return Result{path, importedBy}
+}
+//line fetcher/gopkg/gopkg_imps.gop:44:1
 // URL returns the input URL for the given name.
 func URL(name interface{}) string {
-//line fetcher/gopkg/gopkg_imps.gop:43:1
+//line fetcher/gopkg/gopkg_imps.gop:46:1
 	return "https://pkg.go.dev/" + name.(string)
 }
-//line fetcher/gopkg/gopkg_imps.gop:46:1
+//line fetcher/gopkg/gopkg_imps.gop:49:1
 func init() {
-//line fetcher/gopkg/gopkg_imps.gop:47:1
+//line fetcher/gopkg/gopkg_imps.gop:50:1
 	fetcher.Register("gopkg", New, URL)
 }

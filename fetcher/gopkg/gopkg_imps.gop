@@ -23,19 +23,22 @@ import (
 )
 
 type Result struct {
-	Name       string `json:"name"`
+	Path       string `json:"path"`
 	ImportedBy int    `json:"importedBy"`
 }
 
 // New creates a new Result from a html document.
 func New(input any, doc hdq.NodeSet) Result {
 	const importedByPrefix = "Imported By:"
-	name := input.(string)
+	path := input.(string)
 	a := doc.any.a.attribute("aria-label", v => strings.hasPrefix(v, importedByPrefix)).one
+	if !a.ok {
+		return {path, 0}
+	}
 	label := a.attr("aria-label")!
 	labelVal := strings.trimSpace(label[len(importedByPrefix):])
 	importedBy := strings.replaceAll(labelVal, ",", "").int!
-	return {name, importedBy}
+	return {path, importedBy}
 }
 
 // URL returns the input URL for the given name.

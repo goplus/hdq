@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/goplus/hdq"
+	"github.com/goplus/hdq/fetcher/gopkg"
 	"github.com/goplus/hdq/fetcher/torch"
 	"github.com/goplus/hdq/hdqtest"
 
@@ -41,6 +42,10 @@ func TestGithub(t *testing.T) {
 
 func TestTorch(t *testing.T) {
 	hdqtest.FromDir(t, "", "./fetcher/torch/_testdata", torch.New, "data.zip#index.htm", "zip")
+}
+
+func TestGoPkg(t *testing.T) {
+	hdqtest.FromDir(t, "", "./fetcher/gopkg/_testdata", gopkg.New, "data.zip#index.htm", "zip")
 }
 
 func TestSource(t *testing.T) {

@@ -1,0 +1,33 @@
+package gopkg
+
+import (
+	"strings"
+
+	"github.com/goplus/hdq"
+	"github.com/goplus/hdq/fetcher"
+)
+
+type Result struct {
+	Name       string `json:"name"`
+	ImportedBy int    `json:"importedBy"`
+}
+
+// New creates a new Result from a html document.
+func New(input any, doc hdq.NodeSet) Result {
+	const importedByPrefix = "Imported By:"
+	name := input.(string)
+	a := doc.any.a.attribute("aria-label", v => strings.hasPrefix(v, importedByPrefix)).one
+	label := a.attr("aria-label")!
+	labelVal := strings.trimSpace(label[len(importedByPrefix):])
+	importedBy := strings.replaceAll(labelVal, ",", "").int!
+	return {name, importedBy}
+}
+
+// URL returns the input URL for the given name.
+func URL(name any) string {
+	return "https://pkg.go.dev/" + name.(string)
+}
+
+func init() {
+	fetcher.Register("gopkg", New, URL)
+}

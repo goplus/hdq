@@ -46,6 +46,9 @@ func main() {
 		return docs[i].ImportedBy > docs[j].ImportedBy
 	})
 	for _, doc := range docs {
-		fmt.Println(doc.Path, doc.ImportedBy)
+		if doc.ImportedBy == 0 {
+			break
+		}
+		fmt.Printf("- [ ] %s (Imported By: %d)\n", doc.Path, doc.ImportedBy)
 	}
 }

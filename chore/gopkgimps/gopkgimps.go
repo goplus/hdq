@@ -18,41 +18,35 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"os"
-	"strings"
+	"sort"
 
 	"github.com/goplus/hdq/fetcher"
-	_ "github.com/goplus/hdq/fetcher/torch"
+	"github.com/goplus/hdq/fetcher/gopkg"
 	_ "github.com/goplus/hdq/stream/http/cached"
 )
 
-type module struct {
-	Name  string `json:"name"`
-	Items []any  `json:"items"`
-}
-
-// Usage: pysigfetch module [name ...]
+// Usage: gopkgimps [pkgPath ...]
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Fprintln(os.Stderr, "Usage: pysigfetch module [name ...]")
+	if len(os.Args) < 2 {
+		fmt.Fprintln(os.Stderr, "Usage: gopkgimps [pkgPath ...]")
 		os.Exit(1)
 	}
-	moduleName := os.Args[1]
-	names := os.Args[2:]
-	if len(names) == 1 && names[0] == "-" {
-		b, _ := io.ReadAll(os.Stdin)
-		names = strings.Split(strings.TrimSpace(string(b)), " ")
-	}
-	docs := make([]any, 0, len(names))
+	names := os.Args[1:]
+	docs := make([]gopkg.Result, 0, len(names))
 	for _, name := range names {
 		log.Println("==> Fetch", name)
-		doc, err := fetcher.FromInput(moduleName, name)
+		doc, err := fetcher.FromInput("gopkg", name)
 		if err == fetcher.ErrUnknownPageType {
 			break
 		}
-		docs = append(docs, doc)
+		docs = append(docs, doc.(gopkg.Result))
 	}
-	json.NewEncoder(os.Stdout).Encode(module{moduleName, docs})
+	sort.Slice(docs, func(i, j int) bool {
+		return docs[i].ImportedBy > docs[j].ImportedBy
+	})
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	enc.Encode(docs)
 }

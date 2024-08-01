@@ -5,6 +5,7 @@ package repos
 import (
 	"github.com/goplus/hdq"
 	"github.com/qiniu/x/errors"
+	"golang.org/x/net/html/atom"
 )
 
 const GopPackage = "github.com/goplus/hdq"
@@ -22,132 +23,132 @@ type Result struct {
 	Repos []Repo
 	Next  string
 }
-//line tutorial/02-GithubRepos/repos.gop:18:1
-func newRepo(node hdq.NodeSet) Repo {
 //line tutorial/02-GithubRepos/repos.gop:19:1
+func newRepo(node hdq.NodeSet) Repo {
+//line tutorial/02-GithubRepos/repos.gop:20:1
 	aRepo := node.Any().A().Attr__1("itemprop", "name codeRepository").One()
-//line tutorial/02-GithubRepos/repos.gop:20:1
+//line tutorial/02-GithubRepos/repos.gop:21:1
 	repo := func() (_gop_ret string) {
-//line tutorial/02-GithubRepos/repos.gop:20:1
+//line tutorial/02-GithubRepos/repos.gop:21:1
 		var _gop_err error
-//line tutorial/02-GithubRepos/repos.gop:20:1
+//line tutorial/02-GithubRepos/repos.gop:21:1
 		_gop_ret, _gop_err = aRepo.Href__0()
-//line tutorial/02-GithubRepos/repos.gop:20:1
+//line tutorial/02-GithubRepos/repos.gop:21:1
 		if _gop_err != nil {
-//line tutorial/02-GithubRepos/repos.gop:20:1
-			_gop_err = errors.NewFrame(_gop_err, "aRepo.href", "tutorial/02-GithubRepos/repos.gop", 20, "repos.newRepo")
-//line tutorial/02-GithubRepos/repos.gop:20:1
+//line tutorial/02-GithubRepos/repos.gop:21:1
+			_gop_err = errors.NewFrame(_gop_err, "aRepo.href", "tutorial/02-GithubRepos/repos.gop", 21, "repos.newRepo")
+//line tutorial/02-GithubRepos/repos.gop:21:1
 			panic(_gop_err)
 		}
-//line tutorial/02-GithubRepos/repos.gop:20:1
-		return
-	}()
 //line tutorial/02-GithubRepos/repos.gop:21:1
+		return
+	}()
+//line tutorial/02-GithubRepos/repos.gop:22:1
 	root := aRepo.ParentN(3).One()
-//line tutorial/02-GithubRepos/repos.gop:22:1
+//line tutorial/02-GithubRepos/repos.gop:23:1
 	forkedFrom := func() (_gop_ret string) {
-//line tutorial/02-GithubRepos/repos.gop:22:1
+//line tutorial/02-GithubRepos/repos.gop:23:1
 		var _gop_err error
-//line tutorial/02-GithubRepos/repos.gop:22:1
+//line tutorial/02-GithubRepos/repos.gop:23:1
 		_gop_ret, _gop_err = root.Any().Span().Any().TextContains("Forked from").One().NextSibling(1).A().Href__0()
-//line tutorial/02-GithubRepos/repos.gop:22:1
+//line tutorial/02-GithubRepos/repos.gop:23:1
 		if _gop_err != nil {
-//line tutorial/02-GithubRepos/repos.gop:22:1
+//line tutorial/02-GithubRepos/repos.gop:23:1
 			return ""
 		}
-//line tutorial/02-GithubRepos/repos.gop:22:1
+//line tutorial/02-GithubRepos/repos.gop:23:1
 		return
 	}()
-//line tutorial/02-GithubRepos/repos.gop:23:1
+//line tutorial/02-GithubRepos/repos.gop:24:1
 	title := func() (_gop_ret string) {
-//line tutorial/02-GithubRepos/repos.gop:23:1
+//line tutorial/02-GithubRepos/repos.gop:24:1
 		var _gop_err error
-//line tutorial/02-GithubRepos/repos.gop:23:1
+//line tutorial/02-GithubRepos/repos.gop:24:1
 		_gop_ret, _gop_err = root.Any().P().Attr__1("itemprop", "description").Text__0()
-//line tutorial/02-GithubRepos/repos.gop:23:1
+//line tutorial/02-GithubRepos/repos.gop:24:1
 		if _gop_err != nil {
-//line tutorial/02-GithubRepos/repos.gop:23:1
+//line tutorial/02-GithubRepos/repos.gop:24:1
 			return ""
 		}
-//line tutorial/02-GithubRepos/repos.gop:23:1
+//line tutorial/02-GithubRepos/repos.gop:24:1
 		return
 	}()
-//line tutorial/02-GithubRepos/repos.gop:24:1
+//line tutorial/02-GithubRepos/repos.gop:25:1
 	language := func() (_gop_ret string) {
-//line tutorial/02-GithubRepos/repos.gop:24:1
+//line tutorial/02-GithubRepos/repos.gop:25:1
 		var _gop_err error
-//line tutorial/02-GithubRepos/repos.gop:24:1
+//line tutorial/02-GithubRepos/repos.gop:25:1
 		_gop_ret, _gop_err = root.Any().Span().Attr__1("itemprop", "programmingLanguage").One().Text__0()
-//line tutorial/02-GithubRepos/repos.gop:24:1
+//line tutorial/02-GithubRepos/repos.gop:25:1
 		if _gop_err != nil {
-//line tutorial/02-GithubRepos/repos.gop:24:1
+//line tutorial/02-GithubRepos/repos.gop:25:1
 			return ""
 		}
-//line tutorial/02-GithubRepos/repos.gop:24:1
+//line tutorial/02-GithubRepos/repos.gop:25:1
 		return
 	}()
-//line tutorial/02-GithubRepos/repos.gop:25:1
+//line tutorial/02-GithubRepos/repos.gop:26:1
 	updateTime := func() (_gop_ret string) {
-//line tutorial/02-GithubRepos/repos.gop:25:1
+//line tutorial/02-GithubRepos/repos.gop:26:1
 		var _gop_err error
-//line tutorial/02-GithubRepos/repos.gop:25:1
-		_gop_ret, _gop_err = root.Any().Element("relative-time").One().Attr__0("datetime")
-//line tutorial/02-GithubRepos/repos.gop:25:1
+//line tutorial/02-GithubRepos/repos.gop:26:1
+		_gop_ret, _gop_err = root.Any().Element__1("relative-time").One().Attr__0("datetime")
+//line tutorial/02-GithubRepos/repos.gop:26:1
 		if _gop_err != nil {
-//line tutorial/02-GithubRepos/repos.gop:25:1
+//line tutorial/02-GithubRepos/repos.gop:26:1
 			return ""
-		}
-//line tutorial/02-GithubRepos/repos.gop:25:1
-		return
-	}()
-//line tutorial/02-GithubRepos/repos.gop:26:1
-	forks := func() (_gop_ret int) {
-//line tutorial/02-GithubRepos/repos.gop:26:1
-		var _gop_err error
-//line tutorial/02-GithubRepos/repos.gop:26:1
-		_gop_ret, _gop_err = root.Any().A().Attr__1("href", repo+"/network/members").Int__0()
-//line tutorial/02-GithubRepos/repos.gop:26:1
-		if _gop_err != nil {
-//line tutorial/02-GithubRepos/repos.gop:26:1
-			return 0
 		}
 //line tutorial/02-GithubRepos/repos.gop:26:1
 		return
 	}()
 //line tutorial/02-GithubRepos/repos.gop:27:1
+	forks := func() (_gop_ret int) {
+//line tutorial/02-GithubRepos/repos.gop:27:1
+		var _gop_err error
+//line tutorial/02-GithubRepos/repos.gop:27:1
+		_gop_ret, _gop_err = root.Any().A().Attr__1("href", repo+"/network/members").Int__0()
+//line tutorial/02-GithubRepos/repos.gop:27:1
+		if _gop_err != nil {
+//line tutorial/02-GithubRepos/repos.gop:27:1
+			return 0
+		}
+//line tutorial/02-GithubRepos/repos.gop:27:1
+		return
+	}()
+//line tutorial/02-GithubRepos/repos.gop:28:1
 	return Repo{Repo: repo, ForkedFrom: forkedFrom, Title: title, Language: language, UpdateTime: updateTime, Forks: forks}
 }
-//line tutorial/02-GithubRepos/repos.gop:44:1
+//line tutorial/02-GithubRepos/repos.gop:45:1
 // New creates a new Result from a html document.
 func New(_ interface{}, doc hdq.NodeSet) Result {
-//line tutorial/02-GithubRepos/repos.gop:46:1
-	divRepos := doc.Any().Div().Id("user-repositories-list").One()
-//line tutorial/02-GithubRepos/repos.gop:47:1
+//line tutorial/02-GithubRepos/repos.gop:48:1
+	divRepos := doc.Any().Element__0(atom.Div).Id("user-repositories-list").One()
+//line tutorial/02-GithubRepos/repos.gop:49:1
 	repoList := divRepos.Child().Ul().One()
-//line tutorial/02-GithubRepos/repos.gop:48:1
+//line tutorial/02-GithubRepos/repos.gop:50:1
 	repos := func() (_gop_ret []Repo) {
-//line tutorial/02-GithubRepos/repos.gop:48:1
+//line tutorial/02-GithubRepos/repos.gop:50:1
 		repoList.Child().Li().Gop_Enum(func(x hdq.NodeSet) {
-//line tutorial/02-GithubRepos/repos.gop:48:1
+//line tutorial/02-GithubRepos/repos.gop:50:1
 			_gop_ret = append(_gop_ret, newRepo(x))
 		})
-//line tutorial/02-GithubRepos/repos.gop:48:1
+//line tutorial/02-GithubRepos/repos.gop:50:1
 		return
 	}()
-//line tutorial/02-GithubRepos/repos.gop:49:1
+//line tutorial/02-GithubRepos/repos.gop:51:1
 	next := func() (_gop_ret string) {
-//line tutorial/02-GithubRepos/repos.gop:49:1
+//line tutorial/02-GithubRepos/repos.gop:51:1
 		var _gop_err error
-//line tutorial/02-GithubRepos/repos.gop:49:1
+//line tutorial/02-GithubRepos/repos.gop:51:1
 		_gop_ret, _gop_err = doc.Any().Div().Class("paginate-container").One().Any().A().ChildEqualText("Next").Href__0()
-//line tutorial/02-GithubRepos/repos.gop:49:1
+//line tutorial/02-GithubRepos/repos.gop:51:1
 		if _gop_err != nil {
-//line tutorial/02-GithubRepos/repos.gop:49:1
+//line tutorial/02-GithubRepos/repos.gop:51:1
 			return ""
 		}
-//line tutorial/02-GithubRepos/repos.gop:49:1
+//line tutorial/02-GithubRepos/repos.gop:51:1
 		return
 	}()
-//line tutorial/02-GithubRepos/repos.gop:50:1
+//line tutorial/02-GithubRepos/repos.gop:52:1
 	return Result{Repos: repos, Next: next}
 }

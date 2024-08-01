@@ -82,30 +82,40 @@ func (p NodeSet) dataAtom(elem atom.Atom) (ret NodeSet) {
 	})
 }
 
-// Element returns NodeSet which node type is ElementNode and it's element type is `v`.
-func (p NodeSet) Element(v interface{}) (ret NodeSet) {
-	switch elem := v.(type) {
-	case string:
-		return p.Match(func(node *html.Node) bool {
-			return node.Type == html.ElementNode && node.Data == elem
-		})
-	case atom.Atom:
-		return p.Match(func(node *html.Node) bool {
-			return node.DataAtom == elem
-		})
-	default:
-		panic("unsupport argument type")
-	}
+// Element returns NodeSet which node type is ElementNode and it's element type is `elemType`.
+func (p NodeSet) Element__0(elemType atom.Atom) (ret NodeSet) {
+	return p.dataAtom(elemType)
+}
+
+// Element returns NodeSet which node type is ElementNode and it's element type is `elemType`.
+func (p NodeSet) Element__1(elemType string) (ret NodeSet) {
+	return p.Match(func(node *html.Node) bool {
+		return node.Type == html.ElementNode && node.Data == elemType
+	})
 }
 
 // Attribute returns NodeSet which the value of attribute `k` is `v`.
-func (p NodeSet) Attribute(k, v string) (ret NodeSet) {
+func (p NodeSet) Attribute__0(k, v string) (ret NodeSet) {
 	return p.Match(func(node *html.Node) bool {
 		if node.Type != html.ElementNode {
 			return false
 		}
 		for _, attr := range node.Attr {
 			if attr.Key == k && attr.Val == v {
+				return true
+			}
+		}
+		return false
+	})
+}
+
+func (p NodeSet) Attribute__1(k string, filter func(v string) bool) (ret NodeSet) {
+	return p.Match(func(node *html.Node) bool {
+		if node.Type != html.ElementNode {
+			return false
+		}
+		for _, attr := range node.Attr {
+			if attr.Key == k && filter(attr.Val) {
 				return true
 			}
 		}
@@ -210,12 +220,12 @@ func (p NodeSet) Li() (ret NodeSet) {
 
 // Class returns NodeSet which `class` attribute is `v`.
 func (p NodeSet) Class(v string) (ret NodeSet) {
-	return p.Attribute("class", v)
+	return p.Attribute__0("class", v)
 }
 
 // Id returns NodeSet which `id` attribute is `v`.
 func (p NodeSet) Id(v string) (ret NodeSet) {
-	return p.Attribute("id", v).One()
+	return p.Attribute__0("id", v).One()
 }
 
 // -----------------------------------------------------------------------------
@@ -361,7 +371,7 @@ func (p NodeSet) Href__0() (text string, err error) {
 
 // Href returns NodeSet which `href` attribute is `v`.
 func (p NodeSet) Href__1(v string) (ret NodeSet) {
-	return p.Attribute("href", v)
+	return p.Attribute__0("href", v)
 }
 
 // Href returns href attribute's value of NodeSet.
@@ -374,7 +384,7 @@ func (p NodeSet) Attr__0(k string, exactlyOne ...bool) (text string, err error) 
 }
 
 func (p NodeSet) Attr__1(k, v string) (ret NodeSet) {
-	return p.Attribute(k, v)
+	return p.Attribute__0(k, v)
 }
 
 // -----------------------------------------------------------------------------

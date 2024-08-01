@@ -20,9 +20,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 
 	"github.com/goplus/hdq/fetcher"
-	_ "github.com/goplus/hdq/fetcher/gopkg"
+	"github.com/goplus/hdq/fetcher/gopkg"
 	_ "github.com/goplus/hdq/stream/http/cached"
 )
 
@@ -33,14 +34,19 @@ func main() {
 		os.Exit(1)
 	}
 	names := os.Args[1:]
-	docs := make([]any, 0, len(names))
+	docs := make([]gopkg.Result, 0, len(names))
 	for _, name := range names {
 		log.Println("==> Fetch", name)
 		doc, err := fetcher.FromInput("gopkg", name)
 		if err == fetcher.ErrUnknownPageType {
 			break
 		}
-		docs = append(docs, doc)
+		docs = append(docs, doc.(gopkg.Result))
 	}
-	json.NewEncoder(os.Stdout).Encode(docs)
+	sort.Slice(docs, func(i, j int) bool {
+		return docs[i].ImportedBy > docs[j].ImportedBy
+	})
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	enc.Encode(docs)
 }

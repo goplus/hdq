@@ -82,20 +82,16 @@ func (p NodeSet) dataAtom(elem atom.Atom) (ret NodeSet) {
 	})
 }
 
-// Element returns NodeSet which node type is ElementNode and it's element type is `v`.
-func (p NodeSet) Element(v interface{}) (ret NodeSet) {
-	switch elem := v.(type) {
-	case string:
-		return p.Match(func(node *html.Node) bool {
-			return node.Type == html.ElementNode && node.Data == elem
-		})
-	case atom.Atom:
-		return p.Match(func(node *html.Node) bool {
-			return node.DataAtom == elem
-		})
-	default:
-		panic("unsupport argument type")
-	}
+// Element returns NodeSet which node type is ElementNode and it's element type is `elemType`.
+func (p NodeSet) Element__0(elemType atom.Atom) (ret NodeSet) {
+	return p.dataAtom(elemType)
+}
+
+// Element returns NodeSet which node type is ElementNode and it's element type is `elemType`.
+func (p NodeSet) Element__1(elemType string) (ret NodeSet) {
+	return p.Match(func(node *html.Node) bool {
+		return node.Type == html.ElementNode && node.Data == elemType
+	})
 }
 
 // Attribute returns NodeSet which the value of attribute `k` is `v`.

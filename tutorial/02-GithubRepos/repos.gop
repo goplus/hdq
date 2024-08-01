@@ -2,6 +2,7 @@ package repos
 
 import (
 	"github.com/goplus/hdq"
+	"golang.org/x/net/html/atom"
 )
 
 // -----------------------------------------------------------------------------
@@ -43,7 +44,8 @@ type Result struct {
 
 // New creates a new Result from a html document.
 func New(_ any, doc hdq.NodeSet) Result {
-	divRepos := doc.any.div.id("user-repositories-list").one
+	// divRepos := doc.any.div.id("user-repositories-list").one
+	divRepos := doc.any.element(atom.Div).id("user-repositories-list").one
 	repoList := divRepos.child.ul.one
 	repos := [newRepo(x) for x <- repoList.child.li]
 	next := doc.any.div.class("paginate-container").one.any.a.childEqualText("Next").href?:""

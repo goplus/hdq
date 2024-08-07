@@ -13,29 +13,39 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package links
+package githubisstask
 
 import (
+	"strings"
+
 	"github.com/goplus/hdq"
 	"github.com/goplus/hdq/fetcher"
 )
 
+type Task struct {
+	Desc string `json:"desc"`
+	Done bool   `json:"done"`
+}
+
 type Result struct {
-	URL   string   `json:"url,omitempty"`
-	Hrefs []string `json:"hrefs,omitempty"`
+	Issue string `json:"issue"` // goplus/llgo#642
+	Tasks []Task `json:"tasks"`
 }
 
-// New collects all href links from a html document.
+// New creates a new Result from a html document.
 func New(input any, doc hdq.NodeSet) Result {
-	hrefs := [link for a <- doc.any.a if link := a.href?:""; link != ""]
-	return {input.(string), hrefs}
+	issue := input.(string)
+	taskList := doc.any.ul.class("contains-task-list").one
+	tasks := [Task{li.text!, li.firstElementChild.hasAttr("checked")} for li <- taskList.child.li]
+	return {issue, tasks}
 }
 
-// URL returns the input URL for the given input.
+// URL returns the input URL for the given name.
 func URL(input any) string {
-	return input.(string)
+	issue := input.(string)
+	return "https://github.com/" + strings.Replace(issue, "#", "/issues/", 1)
 }
 
 func init() {
-	fetcher.Register("hrefs", New, URL)
+	fetcher.Register("githubisstask", New, URL)
 }

@@ -72,10 +72,10 @@ func New(input interface{}, doc hdq.NodeSet) Result {
 	return Result{path, importedBy}
 }
 //line fetcher/gopkg/gopkg_imps.gop:44:1
-// URL returns the input URL for the given name.
-func URL(name interface{}) string {
+// URL returns the input URL for the given input.
+func URL(input interface{}) string {
 //line fetcher/gopkg/gopkg_imps.gop:46:1
-	return "https://pkg.go.dev/" + name.(string)
+	return "https://pkg.go.dev/" + input.(string)
 }
 //line fetcher/gopkg/gopkg_imps.gop:49:1
 func init() {

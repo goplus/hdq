@@ -26,6 +26,7 @@ import (
 	"github.com/goplus/hdq/cmd/hdq/internal/help"
 	"github.com/qiniu/x/log"
 
+	_ "github.com/goplus/hdq/fetcher/githubisstask"
 	_ "github.com/goplus/hdq/fetcher/gopkg"
 	_ "github.com/goplus/hdq/fetcher/hrefs"
 	_ "github.com/goplus/hdq/fetcher/torch"

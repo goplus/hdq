@@ -43,6 +43,9 @@ func New(input any, doc hdq.NodeSet) Result {
 // URL returns the input URL for the given name.
 func URL(input any) string {
 	issue := input.(string)
+	if strings.hasPrefix(issue, "https://github.com/") {
+		return issue
+	}
 	return "https://github.com/" + strings.Replace(issue, "#", "/issues/", 1)
 }
 

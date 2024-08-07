@@ -60,10 +60,15 @@ func URL(input interface{}) string {
 //line fetcher/githubisstask/github_issue_task.gop:45:1
 	issue := input.(string)
 //line fetcher/githubisstask/github_issue_task.gop:46:1
+	if strings.HasPrefix(issue, "https://github.com/") {
+//line fetcher/githubisstask/github_issue_task.gop:47:1
+		return issue
+	}
+//line fetcher/githubisstask/github_issue_task.gop:49:1
 	return "https://github.com/" + strings.Replace(issue, "#", "/issues/", 1)
 }
-//line fetcher/githubisstask/github_issue_task.gop:49:1
+//line fetcher/githubisstask/github_issue_task.gop:52:1
 func init() {
-//line fetcher/githubisstask/github_issue_task.gop:50:1
+//line fetcher/githubisstask/github_issue_task.gop:53:1
 	fetcher.Register("githubisstask", New, URL)
 }

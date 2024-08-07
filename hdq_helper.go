@@ -379,6 +379,13 @@ func (p NodeSet) Href__2(exactlyOne bool) (text string, err error) {
 	return p.AttrVal("href", exactlyOne)
 }
 
+// HasAttr returns true if NodeSet has attribute k or not.
+func (p NodeSet) HasAttr(k string, exactlyOne ...bool) bool {
+	_, e := p.AttrVal(k, exactlyOne...)
+	return e == nil
+}
+
+// Attr returns attribute value of NodeSet.
 func (p NodeSet) Attr__0(k string, exactlyOne ...bool) (text string, err error) {
 	return p.AttrVal(k, exactlyOne...)
 }

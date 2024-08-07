@@ -41,9 +41,9 @@ func New(input any, doc hdq.NodeSet) Result {
 	return {path, importedBy}
 }
 
-// URL returns the input URL for the given name.
-func URL(name any) string {
-	return "https://pkg.go.dev/" + name.(string)
+// URL returns the input URL for the given input.
+func URL(input any) string {
+	return "https://pkg.go.dev/" + input.(string)
 }
 
 func init() {

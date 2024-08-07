@@ -48,10 +48,10 @@ func New(input interface{}, doc hdq.NodeSet) Result {
 	return Result{input.(string), hrefs}
 }
 //line fetcher/hrefs/hrefs.gop:34:1
-// URL returns the input URL for the given name.
-func URL(name interface{}) string {
+// URL returns the input URL for the given input.
+func URL(input interface{}) string {
 //line fetcher/hrefs/hrefs.gop:36:1
-	return name.(string)
+	return input.(string)
 }
 //line fetcher/hrefs/hrefs.gop:39:1
 func init() {

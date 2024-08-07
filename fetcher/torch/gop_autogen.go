@@ -66,10 +66,10 @@ func New(input interface{}, doc hdq.NodeSet) Result {
 	return Result{name, "", "", "<NULL>", url}
 }
 //line fetcher/torch/pysig_torch.gop:58:1
-// URL returns the input URL for the given name.
-func URL(name interface{}) string {
+// URL returns the input URL for the given input.
+func URL(input interface{}) string {
 //line fetcher/torch/pysig_torch.gop:60:1
-	return "https://pytorch.org/docs/stable/generated/torch." + name.(string) + ".html"
+	return "https://pytorch.org/docs/stable/generated/torch." + input.(string) + ".html"
 }
 //line fetcher/torch/pysig_torch.gop:63:1
 func init() {

@@ -20,6 +20,7 @@ func main() {
 		panic(err)
 	}
 	var done, total float64
+	var ndone, ntotal int
 	ret := doc.(githubisstask.Result)
 	for _, task := range ret.Tasks {
 		desc := task.Desc // fmt* (Imported By: 4513111)
@@ -28,11 +29,14 @@ func main() {
 			if n, e := strconv.Atoi(ntext); e == nil {
 				w := math.Log2(float64(n) + 1)
 				total += w
+				ntotal += n
 				if task.Done {
 					done += w
+					ndone += n
 				}
 			}
 		}
 	}
-	fmt.Printf("Progress: %.2f%%\n", done/total*100)
+	np := float64(ndone) / float64(ntotal) * 100
+	fmt.Printf("Progress: %.2f%% (%.2f%%)\n", done/total*100, np)
 }

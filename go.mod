@@ -3,7 +3,7 @@ module github.com/goplus/hdq
 go 1.18
 
 require (
-	github.com/qiniu/x v1.13.13
+	github.com/qiniu/x v1.13.19
 	golang.org/x/net v0.34.0
 )
 

@@ -70,7 +70,7 @@ func New(r io.Reader) NodeSet {
 }
 
 // Source opens a stream (if necessary) to create a NodeSet object.
-func Source(r interface{}) (ret NodeSet) {
+func Source(r any) (ret NodeSet) {
 	switch v := r.(type) {
 	case string:
 		f, err := stream.Open(v)

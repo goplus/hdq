@@ -44,7 +44,7 @@ func links(r interface{}) []string {
 func main() {
 	for
 //line tutorial/01-Links/links.gop:11:1
-	_, link := range links("zip://../02-GithubRepos/data.zip#index.htm") {
+	_, link := range links("zip:../../_testdata/github/repos/data.zip#index.htm") {
 //line tutorial/01-Links/links.gop:12:1
 		fmt.Println(link)
 	}

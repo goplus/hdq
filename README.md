@@ -21,7 +21,7 @@ How to collect all links of a html page? If you use `hdq`, it is very easy.
 ```go
 import "github.com/goplus/hdq"
 
-func links(url interface{}) []string {
+func links(url any) []string {
 	doc := hdq.Source(url)
 	return [link for a <- doc.any.a if link := a.href?:""; link != ""]
 }

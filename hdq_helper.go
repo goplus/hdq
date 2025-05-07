@@ -29,7 +29,7 @@ import (
 // -----------------------------------------------------------------------------
 
 // Printf prints the NodeSet context and `print(format, params...)`.
-func (p NodeSet) Printf(w io.Writer, format string, params ...interface{}) NodeSet {
+func (p NodeSet) Printf(w io.Writer, format string, params ...any) NodeSet {
 	if p.Err != nil {
 		return p
 	}

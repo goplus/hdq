@@ -8,6 +8,6 @@ func links(r any) []string {
 	return [link for a <- doc.any.a if link := a.href?:""; link != ""]
 }
 
-for link <- links("zip:../../_testdata/github/repos/data.zip#index.htm") {
+for link in links("zip:../../_testdata/github/repos/data.zip#index.htm") {
 	echo link
 }

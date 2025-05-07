@@ -3,11 +3,11 @@ import (
 	"os"
 )
 
-func links(r interface{}) []string {
+func links(r any) []string {
 	doc := hdq.Source(r)
 	return [link for a <- doc.any.a if link := a.href?:""; link != ""]
 }
 
-for link <- links("zip://../02-GithubRepos/data.zip#index.htm") {
-	println(link)
+for link <- links("zip:../../_testdata/github/repos/data.zip#index.htm") {
+	echo link
 }

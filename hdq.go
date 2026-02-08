@@ -77,6 +77,7 @@ func Source(r any) (ret NodeSet) {
 		if err != nil {
 			return NodeSet{Err: err}
 		}
+		defer f.Close()
 		return New(f)
 	case []byte:
 		r := bytes.NewReader(v)

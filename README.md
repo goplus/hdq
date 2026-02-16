@@ -8,6 +8,8 @@ hdq - HTML DOM Query Language for XGo
 [![Language](https://img.shields.io/badge/language-XGo-blue.svg)](https://github.com/goplus/gop)
 [![GoDoc](https://img.shields.io/badge/godoc-reference-teal.svg)](https://pkg.go.dev/mod/github.com/goplus/hdq)
 
+This project is DEPRECATED! It is now part of the [XGo](https://github.com/goplus/xgo) standard library (and has been upgraded to [DQL - DOM Query Language](https://github.com/goplus/xgo/tree/main/dql)).
+
 ## Summary about hdq
 
 hdq is a XGo package for processing HTML documents.
